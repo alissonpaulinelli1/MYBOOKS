@@ -1,354 +1,521 @@
-// =======================
-// MyMagicStoryBooks - script.js
-// =======================
+/* ===========================
+   MyMagicStoryBooks - script.js
+   - Mostra BEFORE com a foto enviada
+   - Cria AFTER estilo BOOK (Cover + Page1 + Page2) usando Canvas
+   - 8 temas (bilingue)
+   =========================== */
 
-const THEMES = [
-  {
-    id: "adventure",
-    name: "Adventure / Aventura",
-    icon: "🧭",
-    desc: "Your child becomes a brave explorer in a magical journey.",
-    palette: ["#7c5cff", "#2ee9a6", "#ffcf4a"],
-    storyTitle: "The Brave Little Explorer",
-    p1: (n, a) => `One sunny morning, ${n} (age ${a}) found a glowing map under the pillow. It whispered: “A treasure needs a hero!”`,
-    p2: (n) => `${n} crossed rainbow bridges, helped a tiny dragon, and discovered the greatest treasure of all: courage inside the heart.`
-  },
-  {
-    id: "bedtime",
-    name: "Bedtime / Dormir",
-    icon: "🌙",
-    desc: "A calm story that helps your child relax and sleep peacefully.",
-    palette: ["#3b82f6", "#a78bfa", "#ffcf4a"],
-    storyTitle: "Goodnight, Little Star",
-    p1: (n, a) => `${n} (age ${a}) looked outside and saw a sleepy star waving softly. “Come,” the star said, “let’s breathe slow and rest.”`,
-    p2: (n) => `Clouds became pillows, the moon sang a lullaby, and ${n} drifted into the sweetest dream—safe, warm, and loved.`
-  },
-  {
-    id: "emotions",
-    name: "Emotions / Emoções",
-    icon: "😊",
-    desc: "A gentle story that teaches feelings and how to handle them.",
-    palette: ["#ff5aa5", "#2ee9a6", "#60a5fa"],
-    storyTitle: "The Color of Feelings",
-    p1: (n, a) => `${n} (age ${a}) opened a magic paint box. Each feeling had a color: happy yellow, calm blue, brave green.`,
-    p2: (n) => `When a stormy gray feeling appeared, ${n} took deep breaths and asked for help—then painted hope into the sky again.`
-  },
-  {
-    id: "friendship",
-    name: "Friendship / Amizade",
-    icon: "🤝",
-    desc: "A story about kindness, sharing, and making friends.",
-    palette: ["#2ee9a6", "#f472b6", "#ffcf4a"],
-    storyTitle: "The Best New Friend",
-    p1: (n, a) => `${n} (age ${a}) met a shy little creature near the playground. It wanted to play, but didn’t know how to ask.`,
-    p2: (n) => `${n} smiled, shared a toy, and said, “Let’s play together.” The shy creature became a best friend forever.`
-  },
-  {
-    id: "family",
-    name: "Family / Família",
-    icon: "🏡",
-    desc: "A warm story about love, hugs, and family adventures.",
-    palette: ["#fb7185", "#fdba74", "#60a5fa"],
-    storyTitle: "Our Family Magic",
-    p1: (n, a) => `${n} (age ${a}) found a “Love Compass.” It always pointed to family—where hugs, laughter, and help live.`,
-    p2: (n) => `No matter where ${n} traveled, the compass reminded: “Home is the people who love you.”`
-  },
-  {
-    id: "school",
-    name: "School / Escola",
-    icon: "🎒",
-    desc: "A story that makes school feel exciting and safe.",
-    palette: ["#60a5fa", "#34d399", "#fbbf24"],
-    storyTitle: "First Day Superstar",
-    p1: (n, a) => `${n} (age ${a}) walked into school with a tiny butterfly in the tummy. The classroom felt big and new.`,
-    p2: (n) => `With one friendly hello, ${n} became a superstar—learning, laughing, and feeling proud all day long.`
-  },
-  {
-    id: "courage",
-    name: "Courage / Coragem",
-    icon: "🦁",
-    desc: "A story about bravery—facing fears and feeling strong.",
-    palette: ["#fbbf24", "#fb7185", "#7c5cff"],
-    storyTitle: "The Courage Roar",
-    p1: (n, a) => `${n} (age ${a}) heard a scary sound at night. A tiny lion appeared and said, “You already have courage.”`,
-    p2: (n) => `${n} practiced the “courage roar,” turned on a gentle light, and felt brave—because brave means doing it even when nervous.`
-  },
-  {
-    id: "fantasy",
-    name: "Fantasy / Fantasia",
-    icon: "🦄",
-    desc: "A magical kingdom story with castles, sparkles, and wonder.",
-    palette: ["#a78bfa", "#22c55e", "#ffcf4a"],
-    storyTitle: "The Magic Kingdom Key",
-    p1: (n, a) => `${n} (age ${a}) discovered a golden key that opened a hidden door. Behind it: a candy-colored kingdom!`,
-    p2: (n) => `${n} rode a friendly unicorn, met giggling fairies, and learned the kingdom’s secret: kindness is the strongest magic.`
+(() => {
+  // ---------------------------
+  // Helpers
+  // ---------------------------
+  const $ = (sel) => document.querySelector(sel);
+
+  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+  function pickThemeByValue(value) {
+    return THEMES.find(t => t.value === value) || THEMES[0];
   }
-];
 
-let selectedThemeId = "adventure";
+  function safeText(s, fallback = "") {
+    return (typeof s === "string" && s.trim().length) ? s.trim() : fallback;
+  }
 
-function svgToDataUri(svg) {
-  const encoded = encodeURIComponent(svg)
-    .replace(/'/g, "%27")
-    .replace(/"/g, "%22");
-  return `data:image/svg+xml;charset=utf-8,${encoded}`;
-}
+  function createObjectURLSafe(file) {
+    try { return URL.createObjectURL(file); } catch { return null; }
+  }
 
-function getTheme(id) {
-  return THEMES.find(t => t.id === id) || THEMES[0];
-}
+  function loadImageFromFile(file) {
+    return new Promise((resolve, reject) => {
+      const url = createObjectURLSafe(file);
+      if (!url) return reject(new Error("Não consegui ler a imagem."));
+      const img = new Image();
+      img.onload = () => {
+        // libera url
+        try { URL.revokeObjectURL(url); } catch {}
+        resolve(img);
+      };
+      img.onerror = () => reject(new Error("Imagem inválida ou corrompida."));
+      img.src = url;
+    });
+  }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    "\"":"&quot;",
-    "'":"&#039;"
-  }[m]));
-}
+  function roundedRect(ctx, x, y, w, h, r) {
+    const radius = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + w, y, x + w, y + h, radius);
+    ctx.arcTo(x + w, y + h, x, y + h, radius);
+    ctx.arcTo(x, y + h, x, y, radius);
+    ctx.arcTo(x, y, x + w, y, radius);
+    ctx.closePath();
+  }
 
-// -----------------------
-// Book artwork (SVG)
-// -----------------------
-function makeCoverSVG(theme, kidName, kidAge, photoUrl) {
-  const [c1, c2, c3] = theme.palette;
-  const title = escapeHtml(theme.storyTitle);
-  const n = escapeHtml(kidName);
+  function circleCrop(ctx, img, cx, cy, r) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
 
-  return `
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${c1}" stop-opacity="0.9"/>
-      <stop offset="0.55" stop-color="${c2}" stop-opacity="0.85"/>
-      <stop offset="1" stop-color="${c3}" stop-opacity="0.85"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f1223" flood-opacity="0.25"/>
-    </filter>
-    <clipPath id="photoClip">
-      <circle cx="250" cy="300" r="140"/>
-    </clipPath>
-  </defs>
+    // cover the circle area
+    const targetSize = r * 2;
+    const imgAspect = img.width / img.height;
+    let dw = targetSize, dh = targetSize;
+    if (imgAspect > 1) {
+      // wide
+      dh = targetSize;
+      dw = targetSize * imgAspect;
+    } else {
+      // tall
+      dw = targetSize;
+      dh = targetSize / imgAspect;
+    }
+    const dx = cx - dw / 2;
+    const dy = cy - dh / 2;
 
-  <rect x="0" y="0" width="1200" height="800" rx="42" fill="url(#bg)"/>
-  <circle cx="1040" cy="120" r="90" fill="white" opacity="0.22"/>
-  <circle cx="1020" cy="650" r="140" fill="white" opacity="0.14"/>
-  <circle cx="140" cy="680" r="120" fill="white" opacity="0.12"/>
+    ctx.drawImage(img, dx, dy, dw, dh);
+    ctx.restore();
+  }
 
-  <rect x="60" y="60" width="1080" height="680" rx="42" fill="rgba(255,255,255,0.80)" filter="url(#shadow)"/>
-  <rect x="60" y="60" width="1080" height="680" rx="42" fill="none" stroke="rgba(31,36,64,0.12)" stroke-width="3"/>
+  function drawSticker(ctx, x, y, text, bg) {
+    ctx.save();
+    ctx.font = "700 20px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    const padX = 14, padY = 9;
+    const w = ctx.measureText(text).width + padX * 2;
+    const h = 34;
+    ctx.fillStyle = bg;
+    roundedRect(ctx, x, y, w, h, 999);
+    ctx.fill();
+    ctx.fillStyle = "rgba(0,0,0,.75)";
+    ctx.fillText(text, x + padX, y + 24);
+    ctx.restore();
+  }
 
-  <text x="520" y="190" font-size="54" font-family="Baloo 2, Arial" font-weight="900" fill="#1f2440">${title}</text>
-  <text x="520" y="235" font-size="28" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.75)">Starring: ${n} • Age ${kidAge}</text>
+  function createCoverCanvas({ kidImg, kidName, kidAge, theme }) {
+    // “book cover style”
+    const W = 1100, H = 700;
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
 
-  <circle cx="250" cy="300" r="158" fill="rgba(255,255,255,0.95)" stroke="rgba(31,36,64,0.10)" stroke-width="4"/>
-  <image href="${photoUrl}" x="110" y="160" width="280" height="280" preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip)"/>
+    // background gradient
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, theme.colors[0]);
+    g.addColorStop(1, theme.colors[1]);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
 
-  <text x="250" y="490" text-anchor="middle" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="rgba(31,36,64,0.78)">Your Child’s Photo</text>
+    // big card
+    ctx.fillStyle = "rgba(255,255,255,.82)";
+    roundedRect(ctx, 70, 80, W - 140, H - 160, 34);
+    ctx.fill();
 
-  <g opacity="0.95">
-    <rect x="520" y="280" width="280" height="58" rx="29" fill="rgba(255,255,255,0.82)" stroke="rgba(31,36,64,0.10)" />
-    <text x="660" y="318" text-anchor="middle" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">FREE PREVIEW ✨</text>
+    // top title
+    ctx.fillStyle = "rgba(0,0,0,.85)";
+    ctx.font = "800 54px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText(theme.bookTitle(kidName), 140, 170);
 
-    <rect x="520" y="350" width="520" height="300" rx="28" fill="rgba(255,255,255,0.70)" stroke="rgba(31,36,64,0.10)"/>
-    <text x="550" y="405" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="rgba(31,36,64,0.85)">Theme:</text>
-    <text x="620" y="405" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">${escapeHtml(theme.name)}</text>
+    ctx.fillStyle = "rgba(0,0,0,.65)";
+    ctx.font = "650 24px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText(`Starring: ${kidName} • Age ${kidAge}`, 140, 215);
 
-    <text x="550" y="450" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Personalized story</text>
-    <text x="550" y="485" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Kid-friendly preview</text>
-    <text x="550" y="520" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Your child as the hero</text>
-    <text x="550" y="555" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Cover + pages preview</text>
+    // kid photo circle
+    const cx = 230, cy = 370, r = 95;
+    ctx.fillStyle = "rgba(255,255,255,.9)";
+    ctx.beginPath(); ctx.arc(cx, cy, r + 10, 0, Math.PI * 2); ctx.fill();
+    circleCrop(ctx, kidImg, cx, cy, r);
 
-    <rect x="550" y="595" width="420" height="44" rx="22" fill="rgba(124,92,255,0.18)" stroke="rgba(31,36,64,0.10)"/>
-    <text x="760" y="623" text-anchor="middle" font-size="18" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">Made with love for kids 💛</text>
-  </g>
-</svg>`;
-}
+    // “Your child’s photo”
+    ctx.fillStyle = "rgba(0,0,0,.55)";
+    ctx.font = "700 20px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText("Your child’s photo", 150, 510);
 
-function makePageSVG(theme, pageNumber, kidName, kidAge, photoUrl, storyLine) {
-  const [c1, c2, c3] = theme.palette;
-  const n = escapeHtml(kidName);
-  const line = escapeHtml(storyLine);
-
-  return `
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
-  <defs>
-    <linearGradient id="bgp" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${c2}" stop-opacity="0.35"/>
-      <stop offset="0.55" stop-color="${c3}" stop-opacity="0.28"/>
-      <stop offset="1" stop-color="${c1}" stop-opacity="0.30"/>
-    </linearGradient>
-    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#0f1223" flood-opacity="0.22"/>
-    </filter>
-    <clipPath id="photoClip2">
-      <rect x="90" y="160" width="420" height="420" rx="34"/>
-    </clipPath>
-  </defs>
-
-  <rect x="0" y="0" width="1200" height="800" rx="42" fill="url(#bgp)"/>
-  <rect x="60" y="60" width="1080" height="680" rx="42" fill="rgba(255,255,255,0.86)" filter="url(#shadow2)"/>
-  <rect x="60" y="60" width="1080" height="680" rx="42" fill="none" stroke="rgba(31,36,64,0.10)" stroke-width="3"/>
-
-  <text x="100" y="125" font-size="24" font-family="Baloo 2, Arial" font-weight="900" fill="#1f2440">${escapeHtml(theme.storyTitle)} — Page ${pageNumber}</text>
-  <text x="100" y="152" font-size="16" font-family="Nunito, Arial" font-weight="900" fill="rgba(31,36,64,0.70)">Featuring ${n} (age ${kidAge})</text>
-
-  <rect x="90" y="160" width="420" height="420" rx="34" fill="rgba(255,255,255,0.92)" stroke="rgba(31,36,64,0.10)" />
-  <image href="${photoUrl}" x="90" y="160" width="420" height="420" preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip2)"/>
-
-  <rect x="540" y="160" width="560" height="420" rx="34" fill="rgba(255,255,255,0.78)" stroke="rgba(31,36,64,0.10)" />
-  <text x="575" y="235" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">Story</text>
-
-  <foreignObject x="575" y="260" width="500" height="280">
-    <div xmlns="http://www.w3.org/1999/xhtml"
-      style="font-family: Nunito, Arial; font-weight: 900; font-size: 22px; color: rgba(31,36,64,0.78); line-height: 1.35;">
-      ${line}
-    </div>
-  </foreignObject>
-</svg>`;
-}
-
-// -----------------------
-// UI render
-// -----------------------
-function renderThemes() {
-  const grid = document.getElementById("themeGrid");
-  if (!grid) return;
-  grid.innerHTML = "";
-
-  THEMES.forEach(t => {
-    const card = document.createElement("div");
-    card.className = "themeCard" + (t.id === selectedThemeId ? " selected" : "");
-    card.innerHTML = `
-      <div class="themeIcon">${t.icon}</div>
-      <div class="themeTitle">${t.name}</div>
-      <p class="themeDesc">${t.desc}</p>
-    `;
-
-    card.addEventListener("click", () => {
-      selectedThemeId = t.id;
-      const label = document.getElementById("selectedThemeLabel");
-      if (label) label.textContent = t.name;
-      renderThemes();
-      const p = document.getElementById("preview");
-      if (p) p.scrollIntoView({ behavior: "smooth", block: "start" });
+    // bullet points
+    ctx.fillStyle = "rgba(0,0,0,.75)";
+    ctx.font = "650 22px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    const bullets = [
+      "Personalized story",
+      "Kid-friendly illustrations (demo)",
+      "Your child as the hero",
+      "Cover + pages preview",
+    ];
+    let by = 310;
+    bullets.forEach(b => {
+      ctx.fillText("• " + b, 420, by);
+      by += 38;
     });
 
-    grid.appendChild(card);
-  });
+    // theme badge
+    drawSticker(ctx, 140, 250, `Theme: ${theme.labelEN} / ${theme.labelPT}`, "rgba(240,220,120,.9)");
 
-  const label = document.getElementById("selectedThemeLabel");
-  if (label) label.textContent = getTheme(selectedThemeId).name;
-}
+    // small footer
+    ctx.fillStyle = "rgba(0,0,0,.55)";
+    ctx.font = "700 18px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText("FREE PREVIEW • Demo book layout — real AI generation comes next", 140, 610);
 
-function renderExamples() {
-  const grid = document.getElementById("exampleGrid");
-  if (!grid) return;
-  grid.innerHTML = "";
+    return c;
+  }
 
-  // Demo "kid photo" (cartoon-style)
-  const demoPhoto = svgToDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ff5aa5" stop-opacity="0.35"/>
-          <stop offset="0.5" stop-color="#7c5cff" stop-opacity="0.30"/>
-          <stop offset="1" stop-color="#2ee9a6" stop-opacity="0.32"/>
-        </linearGradient>
-      </defs>
-      <rect width="800" height="800" rx="60" fill="url(#g)"/>
-      <circle cx="400" cy="340" r="190" fill="rgba(255,255,255,0.85)"/>
-      <circle cx="330" cy="310" r="18" fill="#1f2440"/>
-      <circle cx="470" cy="310" r="18" fill="#1f2440"/>
-      <path d="M320 390 Q400 450 480 390" fill="none" stroke="#1f2440" stroke-width="18" stroke-linecap="round"/>
-      <rect x="260" y="520" width="280" height="120" rx="60" fill="rgba(255,255,255,0.82)"/>
-      <text x="400" y="595" text-anchor="middle" font-family="Baloo 2, Arial" font-size="40" font-weight="900" fill="#1f2440">KID</text>
-    </svg>
-  `);
+  function createPageCanvas({ kidImg, kidName, kidAge, theme, pageNumber, storyLines }) {
+    const W = 1100, H = 700;
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
 
-  THEMES.forEach(t => {
-    const kidName = "Laura";
-    const kidAge = "6";
-    const cover = svgToDataUri(makeCoverSVG(t, kidName, kidAge, demoPhoto));
+    // soft background
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, "rgba(255,255,255,1)");
+    g.addColorStop(1, "rgba(250,250,250,1)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
 
-    const card = document.createElement("div");
-    card.className = "exCard";
-    card.innerHTML = `
-      <div class="exTopRow">
-        <div class="exName">${t.icon} ${t.name}</div>
-      </div>
-      <img class="exThumb" src="${cover}" alt="Example cover">
-    `;
-    grid.appendChild(card);
-  });
-}
+    // page frame
+    ctx.fillStyle = "rgba(255,255,255,.92)";
+    ctx.strokeStyle = "rgba(0,0,0,.08)";
+    ctx.lineWidth = 2;
+    roundedRect(ctx, 70, 70, W - 140, H - 140, 30);
+    ctx.fill();
+    ctx.stroke();
 
-// -----------------------
-// Preview generator
-// -----------------------
-function setupPreviewForm() {
-  const form = document.getElementById("previewForm");
-  const result = document.getElementById("result");
-  if (!form || !result) return;
+    // header
+    ctx.fillStyle = "rgba(0,0,0,.78)";
+    ctx.font = "800 28px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText(`${theme.bookTitle(kidName)} — Page ${pageNumber}`, 120, 125);
 
-  const beforeUpload = document.getElementById("beforeUpload");
-  const afterBook = document.getElementById("afterBook");
+    ctx.fillStyle = "rgba(0,0,0,.55)";
+    ctx.font = "650 18px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText(`Featuring: ${kidName} (age ${kidAge})`, 120, 155);
 
-  const coverImg = document.getElementById("coverImg");
-  const page1Img = document.getElementById("page1Img");
-  const page2Img = document.getElementById("page2Img");
+    // illustration block (left)
+    const ix = 120, iy = 190, iw = 420, ih = 380;
+    const ig = ctx.createLinearGradient(ix, iy, ix + iw, iy + ih);
+    ig.addColorStop(0, theme.colors[0]);
+    ig.addColorStop(1, theme.colors[1]);
+    ctx.fillStyle = ig;
+    roundedRect(ctx, ix, iy, iw, ih, 24);
+    ctx.fill();
 
-  const storyTitle = document.getElementById("storyTitle");
-  const storyLines = document.getElementById("storyLines");
+    // put kid photo as “character cameo” in illustration
+    ctx.fillStyle = "rgba(255,255,255,.88)";
+    ctx.beginPath();
+    ctx.arc(ix + 105, iy + 110, 62, 0, Math.PI * 2);
+    ctx.fill();
+    circleCrop(ctx, kidImg, ix + 105, iy + 110, 54);
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    // small sparkles
+    ctx.fillStyle = "rgba(255,255,255,.8)";
+    ctx.font = "800 38px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText("✦ ✨ ✦", ix + 230, iy + 115);
 
-    const kidName = document.getElementById("kidName").value.trim();
-    const kidAge = document.getElementById("kidAge").value.trim();
+    // story area (right)
+    ctx.fillStyle = "rgba(0,0,0,.82)";
+    ctx.font = "800 26px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText("Story", 585, 240);
 
-    const fileInput = document.getElementById("kidPhoto");
-    const file = fileInput.files && fileInput.files[0];
+    ctx.fillStyle = "rgba(0,0,0,.68)";
+    ctx.font = "650 22px system-ui, -apple-system, Segoe UI, Roboto, Arial";
 
-    if (!kidName || !kidAge) {
-      alert("Please enter name and age.");
+    // wrap text
+    const maxWidth = 430;
+    let y = 285;
+    storyLines.forEach(line => {
+      const words = line.split(" ");
+      let cur = "";
+      for (const w of words) {
+        const test = (cur ? cur + " " : "") + w;
+        if (ctx.measureText(test).width > maxWidth) {
+          ctx.fillText(cur, 585, y);
+          y += 34;
+          cur = w;
+        } else {
+          cur = test;
+        }
+      }
+      if (cur) {
+        ctx.fillText(cur, 585, y);
+        y += 38;
+      }
+      y += 6;
+    });
+
+    // footer tags
+    drawSticker(ctx, 120, 600, `${theme.labelEN} / ${theme.labelPT}`, "rgba(240,220,120,.9)");
+    drawSticker(ctx, 320, 600, `Made for ${kidName}`, "rgba(180,230,200,.9)");
+    drawSticker(ctx, 520, 600, `Preview pages (demo)`, "rgba(200,210,245,.9)");
+
+    return c;
+  }
+
+  // ---------------------------
+  // 8 THEMES (bilingue)
+  // ---------------------------
+  const THEMES = [
+    {
+      value: "adventure",
+      labelEN: "Adventure",
+      labelPT: "Aventura",
+      colors: ["#B6D7FF", "#BDF3D0"],
+      bookTitle: (name) => `The Brave Little Explorer`,
+      story: (name) => ([
+        `${name} found a tiny map that sparkled like a star.`,
+        `“Follow me,” whispered the wind, and ${name} stepped into a magical trail.`,
+        `A friendly dragon smiled, and together they discovered courage in every step.`
+      ])
+    },
+    {
+      value: "bedtime",
+      labelEN: "Bedtime",
+      labelPT: "Dormir",
+      colors: ["#E8D7FF", "#CFF4FF"],
+      bookTitle: (name) => `Goodnight, Little Star`,
+      story: (name) => ([
+        `${name} looked outside and saw a sleepy star waving softly.`,
+        `“Come,” the star said, “let’s breathe slow and rest.”`,
+        `Clouds became pillows, and ${name} drifted into the sweetest dream—safe, warm, and loved.`
+      ])
+    },
+    {
+      value: "emotions",
+      labelEN: "Emotions",
+      labelPT: "Emoções",
+      colors: ["#FFE3B6", "#FFD1F0"],
+      bookTitle: (name) => `Feelings are Superpowers`,
+      story: (name) => ([
+        `${name} met a rainbow that spoke with gentle colors.`,
+        `“Happy, sad, mad, and proud… all feelings are okay,” the rainbow said.`,
+        `${name} learned a calm trick: hand on heart, deep breath, and a brave smile.`
+      ])
+    },
+    {
+      value: "friendship",
+      labelEN: "Friendship",
+      labelPT: "Amizade",
+      colors: ["#CFF7E9", "#D9E6FF"],
+      bookTitle: (name) => `Best Friends Forever`,
+      story: (name) => ([
+        `${name} shared a snack with a shy little bunny in the park.`,
+        `The bunny giggled, and soon a new friend joined the game.`,
+        `Together they built a “kindness castle” where everyone was welcome.`
+      ])
+    },
+    {
+      value: "space",
+      labelEN: "Space",
+      labelPT: "Espaço",
+      colors: ["#C9D2FF", "#BFF3FF"],
+      bookTitle: (name) => `Captain ${safeText("")} & The Moon Mission`.replace("${safeText(\"\")}", ""),
+      story: (name) => ([
+        `${name} put on a tiny helmet and waved to planet Earth.`,
+        `A friendly robot counted down: 3… 2… 1… blast off!`,
+        `On the moon, ${name} planted a flag that read: “I can do hard things.”`
+      ])
+    },
+    {
+      value: "dinosaurs",
+      labelEN: "Dinosaurs",
+      labelPT: "Dinossauros",
+      colors: ["#D7FFD2", "#FFF1B8"],
+      bookTitle: (name) => `Dino Helper ${name}`,
+      story: (name) => ([
+        `${name} heard a “ROAR!”—but it was a dinosaur asking for help.`,
+        `They fixed a wobbly nest with sticks and gentle care.`,
+        `The dinosaur smiled: “You’re my hero,” and ${name} felt super brave.`
+      ])
+    },
+    {
+      value: "princess",
+      labelEN: "Princess & Castle",
+      labelPT: "Princesa & Castelo",
+      colors: ["#FFE0F3", "#D7E6FF"],
+      bookTitle: (name) => `The Kind Castle`,
+      story: (name) => ([
+        `${name} entered a castle where kindness was the rule.`,
+        `A magical crown said: “Kind words make the strongest magic.”`,
+        `${name} helped everyone share, and the castle sparkled brighter than ever.`
+      ])
+    },
+    {
+      value: "superhero",
+      labelEN: "Superhero",
+      labelPT: "Super-herói",
+      colors: ["#FFD2D2", "#D2E6FF"],
+      bookTitle: (name) => `${name} the Little Hero`,
+      story: (name) => ([
+        `${name} found a cape that fluttered like a friendly flag.`,
+        `A tiny city needed help: someone lost a toy, and someone felt sad.`,
+        `${name} used the best power—kindness—and saved the day with a hug.`
+      ])
+    }
+  ];
+
+  // ---------------------------
+  // IDs expected in your HTML
+  // ---------------------------
+  // Inputs
+  const kidNameEl = $("#kidName");
+  const kidAgeEl = $("#kidAge");
+  const kidPhotoEl = $("#kidPhoto"); // <input type="file">
+  const themeEl = $("#themeSelect"); // <select> (opcional)
+  const createBtn = $("#createBtn") || $("#createPreviewBtn") || $("#createPreview");
+
+  // Preview images (set these IDs in HTML)
+  const beforeImg = $("#beforeImg");     // <img id="beforeImg">
+  const afterImg = $("#afterImg");       // <img id="afterImg"> (pode ser cover)
+  const coverImg = $("#coverImg");       // <img id="coverImg">
+  const page1Img = $("#page1Img");       // <img id="page1Img">
+  const page2Img = $("#page2Img");       // <img id="page2Img">
+
+  // Text outputs (opcional)
+  const selectedThemeText = $("#selectedThemeText"); // <div id="selectedThemeText">
+  const storyTitleEl = $("#storyTitle"); // <h4 id="storyTitle">
+  const storyBulletsEl = $("#storyBullets"); // <div id="storyBullets"> or <ul id="storyBullets">
+
+  let selectedFile = null;
+
+  // ---------------------------
+  // Make sure the <select> has 8 themes (if exists)
+  // ---------------------------
+  function ensureThemeOptions() {
+    if (!themeEl) return;
+    if (themeEl.options.length >= 8) return;
+
+    themeEl.innerHTML = "";
+    THEMES.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t.value;
+      opt.textContent = `${t.labelEN} / ${t.labelPT}`;
+      themeEl.appendChild(opt);
+    });
+  }
+
+  // ---------------------------
+  // Update “selected theme” label
+  // ---------------------------
+  function updateThemeLabel(theme) {
+    if (!selectedThemeText) return;
+    selectedThemeText.textContent = `Selected theme: ${theme.labelEN} / ${theme.labelPT}`;
+  }
+
+  // ---------------------------
+  // Render story text (optional)
+  // ---------------------------
+  function renderStoryText(theme, name, age) {
+    if (storyTitleEl) storyTitleEl.textContent = theme.bookTitle(name);
+
+    if (storyBulletsEl) {
+      const lines = theme.story(name);
+
+      // if it's UL
+      if (storyBulletsEl.tagName === "UL" || storyBulletsEl.tagName === "OL") {
+        storyBulletsEl.innerHTML = "";
+        lines.forEach(l => {
+          const li = document.createElement("li");
+          li.textContent = l;
+          storyBulletsEl.appendChild(li);
+        });
+      } else {
+        storyBulletsEl.innerHTML = lines.map(l => `• ${l}`).join("<br>");
+      }
+    }
+  }
+
+  // ---------------------------
+  // Main: create preview
+  // ---------------------------
+  async function createPreview() {
+    const kidName = safeText(kidNameEl?.value, "Laura");
+    const kidAge = clamp(parseInt(kidAgeEl?.value || "6", 10) || 6, 1, 12);
+    const theme = pickThemeByValue(themeEl?.value);
+
+    if (!selectedFile) {
+      alert("Por favor, clique em Upload Photo e escolha uma foto.");
       return;
     }
 
-    if (!file) {
-      alert("Please upload a photo first.");
-      return;
+    updateThemeLabel(theme);
+
+    // 1) Load uploaded photo
+    const kidImg = await loadImageFromFile(selectedFile);
+
+    // 2) Show BEFORE (uploaded photo)
+    if (beforeImg) {
+      const url = createObjectURLSafe(selectedFile);
+      beforeImg.src = url || "";
+      beforeImg.alt = "Before (Your upload)";
     }
 
-    const theme = getTheme(selectedThemeId);
+    // 3) Create “AFTER” (book cover) + pages
+    const coverCanvas = createCoverCanvas({ kidImg, kidName, kidAge, theme });
+    const page1Canvas = createPageCanvas({
+      kidImg, kidName, kidAge, theme,
+      pageNumber: 1,
+      storyLines: theme.story(kidName).slice(0, 2)
+    });
+    const page2Canvas = createPageCanvas({
+      kidImg, kidName, kidAge, theme,
+      pageNumber: 2,
+      storyLines: theme.story(kidName).slice(1, 3)
+    });
 
-    // ✅ Important: show uploaded photo immediately (BEFORE)
-    const photoUrl = URL.createObjectURL(file);
-    if (beforeUpload) beforeUpload.src = photoUrl;
+    const coverData = coverCanvas.toDataURL("image/png");
+    const p1Data = page1Canvas.toDataURL("image/png");
+    const p2Data = page2Canvas.toDataURL("image/png");
 
-    // ✅ After (book style): uses your photo inside the cover SVG
-    const coverDataUri = svgToDataUri(makeCoverSVG(theme, kidName, kidAge, photoUrl));
-    if (afterBook) afterBook.src = coverDataUri;
+    // After image (if you have a single "after" slot)
+    if (afterImg) {
+      afterImg.src = coverData;
+      afterImg.alt = "After (Book-style)";
+    }
 
-    const line1 = theme.p1(kidName, kidAge);
-    const line2 = theme.p2(kidName);
+    // Individual slots
+    if (coverImg) { coverImg.src = coverData; coverImg.alt = "Cover"; }
+    if (page1Img) { page1Img.src = p1Data; page1Img.alt = "Page 1"; }
+    if (page2Img) { page2Img.src = p2Data; page2Img.alt = "Page 2"; }
 
-    if (coverImg) coverImg.src = coverDataUri;
-    if (page1Img) page1Img.src = svgToDataUri(makePageSVG(theme, 1, kidName, kidAge, photoUrl, line1));
-    if (page2Img) page2Img.src = svgToDataUri(makePageSVG(theme, 2, kidName, kidAge, photoUrl, line2));
+    // Story text (optional)
+    renderStoryText(theme, kidName, kidAge);
 
-    if (storyTitle) storyTitle.textContent = theme.storyTitle;
-    if (storyLines) storyLines.innerHTML = `• ${escapeHtml(line1)}<br/><br/>• ${escapeHtml(line2)}`;
+    // Scroll to preview if exists
+    const previewAnchor = $("#preview") || $("#yourPreview") || $("#bookPreview");
+    if (previewAnchor) previewAnchor.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
-    result.classList.remove("hidden");
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-}
+  // ---------------------------
+  // File input handling
+  // ---------------------------
+  function onFileChange(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) {
+      alert("Selecione um arquivo de imagem (JPG/PNG/WebP).");
+      return;
+    }
+    selectedFile = f;
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderThemes();
-  renderExamples();
-  setupPreviewForm();
-});
+  // ---------------------------
+  // Init
+  // ---------------------------
+  ensureThemeOptions();
+
+  if (kidPhotoEl) kidPhotoEl.addEventListener("change", onFileChange);
+
+  if (createBtn) {
+    createBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      createPreview().catch(err => {
+        console.error(err);
+        alert("Deu erro ao criar o preview. Se quiser, me mande print do console (F12).");
+      });
+    });
+  }
+
+  // If theme changes, update label
+  if (themeEl) {
+    themeEl.addEventListener("change", () => {
+      updateThemeLabel(pickThemeByValue(themeEl.value));
+    });
+    updateThemeLabel(pickThemeByValue(themeEl.value));
+  }
+})();
