@@ -33,8 +33,8 @@
       <p>Choose a theme, upload a photo, and instantly generate a colorful preview with a cover + story pages.</p>
 
       <div class="heroCtas">
-        <a class="btn big" href="#themes">Choose a Theme</a>
-        <a class="btn ghost big" href="#preview">Generate Preview</a>
+        <a class="btn big" href="#preview">Generate Preview</a>
+        <a class="btn ghost big" href="#themes">See Themes</a>
       </div>
 
       <div class="trustRow">
@@ -69,14 +69,25 @@
 <section class="themes" id="themes">
   <div class="container">
     <div class="sectionHead">
-      <h2>Choose a Theme</h2>
-      <p>Pick one of 8 themes. The preview will use the selected theme + your child’s photo.</p>
+      <h2>8 Themes</h2>
+      <p>Choose one theme (English / Portuguese). Your preview will use it.</p>
     </div>
 
-    <div class="themeGrid" id="themeGrid"></div>
+    <div class="formCard">
+      <div class="selectedThemeLine" id="selectedThemeText">
+        Selected theme: Adventure / Aventura
+      </div>
 
-    <div class="hint">
-      Tip: Click a theme to select it. Then go to “Create Preview”.
+      <!-- ✅ IMPORTANT: script.js needs themeSelect -->
+      <div style="display:flex;justify-content:center;margin-top:10px;">
+        <select id="themeSelect" style="padding:12px 14px;border-radius:999px;border:1px solid rgba(31,36,64,.14);background:rgba(255,255,255,.86);font-weight:900;min-width:320px;">
+          <!-- Options will be filled automatically by script.js -->
+        </select>
+      </div>
+
+      <div class="hint" style="text-align:center;margin-top:10px;">
+        Tip: pick a theme here, then go to “Create Preview”.
+      </div>
     </div>
   </div>
 </section>
@@ -84,11 +95,13 @@
 <section class="examples" id="examples">
   <div class="container">
     <div class="sectionHead">
-      <h2>Example Books (8 Themes)</h2>
-      <p>These examples show how the book looks. Your child’s photo will be placed on the cover and pages.</p>
+      <h2>Examples</h2>
+      <p>After you generate a preview, you’ll see the book layout (Cover + Pages).</p>
     </div>
 
-    <div class="exampleGrid" id="exampleGrid"></div>
+    <div class="formCard" style="text-align:center;">
+      <div class="hint">Examples grid is optional now. The real “examples” come from your preview.</div>
+    </div>
   </div>
 </section>
 
@@ -96,11 +109,12 @@
   <div class="container">
     <div class="sectionHead">
       <h2>Create Your Free Preview</h2>
-      <p>Enter your child’s name + age, select a theme, upload a photo, and generate a preview.</p>
+      <p>Enter name + age, upload a photo, choose theme, and create the preview.</p>
     </div>
 
     <div class="formCard">
-      <form id="previewForm" class="previewForm">
+      <!-- ✅ IMPORTANT IDs: kidName, kidAge, kidPhoto, createBtn -->
+      <form class="previewForm" onsubmit="return false;">
         <input id="kidName" type="text" placeholder="Child's Name" required />
         <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
 
@@ -109,32 +123,31 @@
           <span>Upload Photo</span>
         </label>
 
-        <button type="submit" class="btn big">Create Preview</button>
+        <button id="createBtn" class="btn big" type="button">Create Preview</button>
       </form>
-
-      <div class="selectedThemeLine">
-        Selected theme: <strong id="selectedThemeLabel">Adventure / Aventura</strong>
-      </div>
     </div>
 
-    <div id="result" class="result hidden">
+    <!-- ✅ PREVIEW OUTPUT -->
+    <div class="result" style="margin-top:16px;">
       <div class="resultHead">
         <h3>Your Book Preview</h3>
         <div class="miniNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</div>
       </div>
 
+      <!-- ✅ IMPORTANT IDs: beforeImg, afterImg -->
       <div class="baRow">
         <div class="baBox">
           <div class="baTitle">Before (Your Upload)</div>
-          <img id="beforeUpload" class="baImg2" alt="Before upload" />
+          <img id="beforeImg" class="baImg2" alt="Before upload" />
         </div>
 
         <div class="baBox">
           <div class="baTitle">After (Book Style)</div>
-          <img id="afterBook" class="baImg2" alt="After book style" />
+          <img id="afterImg" class="baImg2" alt="After book style" />
         </div>
       </div>
 
+      <!-- ✅ IMPORTANT IDs: coverImg, page1Img, page2Img -->
       <div class="previewGrid">
         <div class="previewCard">
           <div class="previewTitle">Cover</div>
@@ -152,9 +165,10 @@
         </div>
       </div>
 
+      <!-- ✅ OPTIONAL story text IDs -->
       <div class="storyText">
         <div class="storyTitle" id="storyTitle"></div>
-        <div class="storyLines" id="storyLines"></div>
+        <div class="storyLines" id="storyBullets"></div>
       </div>
     </div>
   </div>
@@ -165,7 +179,6 @@
     <div>© 2026 MyMagicStoryBooks</div>
     <div class="footLinks">
       <a href="#themes">Themes</a>
-      <a href="#examples">Examples</a>
       <a href="#preview">Create Preview</a>
     </div>
   </div>
