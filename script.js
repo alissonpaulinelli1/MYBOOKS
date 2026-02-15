@@ -33,7 +33,27 @@ generateBtn.addEventListener("click", async () => {
   generateBtn.disabled = true;
   generateBtn.innerText = "Creating illustration...";
 
-  try {
+  try {const imageBase64 = await fileToBase64(file);
+
+const res = await fetch("/api/illustrate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    imageBase64,
+    childName: nameInput.value,
+    age: ageInput.value,
+    theme: hobbyInput.value
+  })
+});
+
+const data = await res.json();
+
+if (!res.ok || !data.image) {
+  throw new Error(data.error || "No image returned");
+}
+
+afterImg.src = data.image;
+afterImg.style.display = "block";
     async function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
