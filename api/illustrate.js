@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export default async function handler(req, res) {
@@ -10,42 +10,38 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { imageBase64, childName, age, theme } = req.body;
+    const { childName, age, theme } = req.body;
 
-    if (!imageBase64) {
-      return res.status(400).json({ error: "No image provided" });
+    if (!childName || !age || !theme) {
+      return res.status(400).json({ error: "Missing data" });
     }
 
     const prompt = `
-    Create a children's book illustration.
-    Style: cute, colorful, soft, storybook illustration.
-    The child is ${childName}, ${age} years old.
+    Cute children's book illustration.
+    Storybook style, soft watercolor, pastel colors.
+    A ${age}-year-old child named ${childName}.
     Theme: ${theme}.
-    Turn the real child into a cartoon-style character.
-    Big eyes, soft lighting, pastel colors, magical atmosphere.
-    Background matches a children's storybook.
-    No text in the image.
+    Big expressive eyes, friendly smile.
+    Magical, warm, Pixar / Disney inspired.
+    No text, no watermark.
     `;
 
-    const result = await openai.images.generate({
+    const image = await openai.images.generate({
       model: "gpt-image-1",
       prompt,
       size: "1024x1024",
-      image: imageBase64.replace(/^data:image\/\w+;base64,/, "")
     });
-
-    const image = result.data[0].b64_json;
 
     res.status(200).json({
       success: true,
-      image: `data:image/png;base64,${image}`
+      image: image.data[0].url,
     });
 
   } catch (error) {
-    console.error("IMAGE ERROR:", error);
+    console.error("API ERROR:", error);
     res.status(500).json({
       error: "Error generating illustration",
-      details: error.message
+      details: error.message,
     });
   }
 }
