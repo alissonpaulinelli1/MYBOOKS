@@ -9,183 +9,193 @@
 <body>
 
 <header class="header">
-  <div class="container">
-    <h1 class="logo">✨ MyMagicStoryBooks</h1>
-    <a href="#preview" class="btn">Create Preview</a>
+  <div class="container headerRow">
+    <div class="brand">
+      <div class="spark">✨</div>
+      <div>
+        <div class="logo">MyMagicStoryBooks</div>
+        <div class="tagline">Turn your child into the hero of a magical story</div>
+      </div>
+    </div>
+
+    <div class="headerBtns">
+      <a class="btn ghost" href="#themes">Themes</a>
+      <a class="btn" href="#preview">Create Preview</a>
+    </div>
   </div>
 </header>
 
 <section class="hero">
-  <div class="container">
-    <h2>Turn your child into the hero of their own magical story</h2>
-    <p>Create a personalized children's book using your child’s name and photo.</p>
-    <a href="#preview" class="btn btn-big">Generate Free Preview</a>
+  <div class="container heroGrid">
+    <div class="heroLeft">
+      <h1>Create a personalized children’s book with your child as the main character</h1>
+      <p>Choose a theme, upload a photo, and instantly generate a colorful preview with a cover + story pages.</p>
+
+      <div class="heroCtas">
+        <a class="btn big" href="#themes">Choose a Theme</a>
+        <a class="btn ghost big" href="#preview">Generate Preview</a>
+      </div>
+
+      <div class="trustRow">
+        <div class="pill">⚡ Instant preview</div>
+        <div class="pill">🎨 Kid-friendly design</div>
+        <div class="pill">📚 8 story themes</div>
+      </div>
+    </div>
+
+    <div class="heroRight">
+      <div class="mockBook">
+        <div class="mockTop">
+          <div class="mockBadge">FREE PREVIEW</div>
+          <div class="mockTitle">Your Child’s Book</div>
+        </div>
+        <div class="mockBody">
+          <div class="mockCover">
+            <div class="mockPhoto"></div>
+            <div class="mockCoverText">Cover + Pages</div>
+          </div>
+          <div class="mockPages">
+            <div class="mockPage"></div>
+            <div class="mockPage"></div>
+          </div>
+        </div>
+        <div class="mockBottom">Upload photo → book preview appears</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ✅ NEW: BEFORE/AFTER EXAMPLES -->
+<!-- THEMES -->
+<section class="themes" id="themes">
+  <div class="container">
+    <div class="sectionHead">
+      <h2>Choose a Theme</h2>
+      <p>Pick one of 8 themes. The preview will use the selected theme + your child’s photo.</p>
+    </div>
+
+    <div class="themeGrid" id="themeGrid">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="hint">
+      Tip: Click a theme to select it. Then go to “Create Preview”.
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLES -->
 <section class="examples" id="examples">
   <div class="container">
-    <h3>Before & After (Examples)</h3>
-    <p class="examplesSub">See how a child becomes the hero of their own story ✨</p>
+    <div class="sectionHead">
+      <h2>Example Books (8 Themes)</h2>
+      <p>These examples show how the book looks. Your child’s photo will be placed on the cover and pages.</p>
+    </div>
 
-    <div class="exGrid">
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before1/700/700" alt="Before example 1">
-          <img class="exImg" src="https://picsum.photos/seed/after1/700/700" alt="After example 1">
-        </div>
-        <div class="exCaption">Adventure Book — Example</div>
-      </div>
-
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before2/700/700" alt="Before example 2">
-          <img class="exImg" src="https://picsum.photos/seed/after2/700/700" alt="After example 2">
-        </div>
-        <div class="exCaption">Bedtime Book — Example</div>
-      </div>
-
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before3/700/700" alt="Before example 3">
-          <img class="exImg" src="https://picsum.photos/seed/after3/700/700" alt="After example 3">
-        </div>
-        <div class="exCaption">Emotions Book — Example</div>
-      </div>
-
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before4/700/700" alt="Before example 4">
-          <img class="exImg" src="https://picsum.photos/seed/after4/700/700" alt="After example 4">
-        </div>
-        <div class="exCaption">Friendship Book — Example</div>
-      </div>
-
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before5/700/700" alt="Before example 5">
-          <img class="exImg" src="https://picsum.photos/seed/after5/700/700" alt="After example 5">
-        </div>
-        <div class="exCaption">School Book — Example</div>
-      </div>
-
-      <div class="exCard">
-        <div class="exTop">
-          <span class="tag before">Before</span>
-          <span class="tag after">After</span>
-        </div>
-        <div class="exImgs">
-          <img class="exImg" src="https://picsum.photos/seed/before6/700/700" alt="Before example 6">
-          <img class="exImg" src="https://picsum.photos/seed/after6/700/700" alt="After example 6">
-        </div>
-        <div class="exCaption">Family Book — Example</div>
-      </div>
+    <div class="exampleGrid" id="exampleGrid">
+      <!-- Filled by JS -->
     </div>
   </div>
 </section>
 
-<section class="books">
-  <div class="container">
-    <h3>Popular Stories</h3>
-
-    <div class="grid">
-      <div class="card">
-        <img class="img" src="https://picsum.photos/seed/hero-book/800/500" alt="Book cover" />
-        <h4>The Brave Little Hero</h4>
-        <p>Build confidence and courage.</p>
-      </div>
-
-      <div class="card">
-        <img class="img" src="https://picsum.photos/seed/bedtime-book/800/500" alt="Book cover" />
-        <h4>The Magic Bedtime</h4>
-        <p>Perfect for bedtime routine.</p>
-      </div>
-
-      <div class="card">
-        <img class="img" src="https://picsum.photos/seed/emotions-book/800/500" alt="Book cover" />
-        <h4>The World of Emotions</h4>
-        <p>Helping kids understand feelings.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- PREVIEW -->
 <section class="preview" id="preview">
   <div class="container">
-    <h3>Create Your Free Preview</h3>
+    <div class="sectionHead">
+      <h2>Create Your Free Preview</h2>
+      <p>Enter your child’s name + age, select a theme, upload a photo, and generate a preview.</p>
+    </div>
 
-    <form id="previewForm" class="previewForm">
-      <input id="kidName" type="text" placeholder="Child's Name" required />
-      <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
+    <div class="formCard">
+      <form id="previewForm" class="previewForm">
+        <input id="kidName" type="text" placeholder="Child's Name" required />
+        <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
 
-      <label class="filePick">
-        <input id="kidPhoto" type="file" accept="image/*" required />
-        <span>Upload Photo</span>
-      </label>
+        <label class="filePick">
+          <input id="kidPhoto" type="file" accept="image/*" required />
+          <span>Upload Photo</span>
+        </label>
 
-      <button type="submit" class="btn btn-big">Create Preview</button>
-    </form>
+        <button type="submit" class="btn big">Create Preview</button>
+      </form>
+
+      <div class="selectedThemeLine">
+        Selected theme: <strong id="selectedThemeLabel">Adventure / Aventura</strong>
+      </div>
+    </div>
 
     <div id="result" class="result hidden">
-      <h4>Your Preview</h4>
+      <div class="resultHead">
+        <h3>Your Book Preview</h3>
+        <div class="miniNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</div>
+      </div>
 
-      <div class="ba">
-        <div class="baCol">
-          <div class="baLabel">Before</div>
-          <img id="beforeImg" class="baImg" alt="Before" />
+      <div class="previewGrid">
+        <div class="previewCard">
+          <div class="previewTitle">Cover</div>
+          <img id="coverImg" class="previewImg" alt="Cover preview" />
         </div>
 
-        <div class="baCol">
-          <div class="baLabel">After (demo)</div>
-          <img id="afterImg" class="baImg" alt="After" />
+        <div class="previewCard">
+          <div class="previewTitle">Page 1</div>
+          <img id="page1Img" class="previewImg" alt="Page 1 preview" />
+        </div>
+
+        <div class="previewCard">
+          <div class="previewTitle">Page 2</div>
+          <img id="page2Img" class="previewImg" alt="Page 2 preview" />
         </div>
       </div>
 
-      <div class="pages">
-        <div class="page">
-          <div class="pageTitle">Page 1 (demo)</div>
-          <img id="page1" class="pageImg" alt="Page 1" />
-        </div>
-
-        <div class="page">
-          <div class="pageTitle">Page 2 (demo)</div>
-          <img id="page2" class="pageImg" alt="Page 2" />
-        </div>
+      <div class="storyText">
+        <div class="storyTitle" id="storyTitle"></div>
+        <div class="storyLines" id="storyLines"></div>
       </div>
-
-      <p class="smallNote">Demo preview — real AI generation comes next.</p>
     </div>
   </div>
 </section>
 
 <footer class="footer">
-  <p>© 2026 MyMagicStoryBooks</p>
+  <div class="container footRow">
+    <div>© 2026 MyMagicStoryBooks</div>
+    <div class="footLinks">
+      <a href="#themes">Themes</a>
+      <a href="#examples">Examples</a>
+      <a href="#preview">Create Preview</a>
+    </div>
+  </div>
 </footer>
 
-<script src="script.js"></script>
-</body>
-</html>
+<!-- Modal -->
+<div class="modal hidden" id="modal">
+  <div class="modalBackdrop" id="modalBackdrop"></div>
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="modalTitle" id="modalTitle">Example Book</div>
+      <button class="xBtn" id="modalClose">✕</button>
+    </div>
+
+    <div class="modalGrid">
+      <div class="previewCard">
+        <div class="previewTitle">Cover</div>
+        <img id="modalCover" class="previewImg" alt="Example cover" />
+      </div>
+      <div class="previewCard">
+        <div class="previewTitle">Page 1</div>
+        <img id="modalPage1" class="previewImg" alt="Example page 1" />
+      </div>
+      <div class="previewCard">
+        <div class="previewTitle">Page 2</div>
+        <img id="modalPage2" class="previewImg" alt="Example page 2" />
+      </div>
+    </div>
+
+    <div class="storyText">
+      <div class="storyTitle" id="modalStoryTitle"></div>
+      <div class="storyLines" id="modalStoryLines"></div>
+    </div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
