@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MyMagicStoryBooks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <h1 class="logo">✨ MyMagicStoryBooks</h1>
+    <a href="#preview" class="btn">Create Preview</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h2>Turn your child into the hero of their own magical story</h2>
+    <p>Create a personalized children's book using your child’s name and photo.</p>
+    <a href="#preview" class="btn btn-big">Generate Free Preview</a>
+  </div>
+</section>
+
+<section class="books">
+  <div class="container">
+    <h3>Popular Stories</h3>
+
+    <div class="grid">
+      <div class="card">
+        <div class="img"></div>
+        <h4>The Brave Little Hero</h4>
+        <p>Build confidence and courage.</p>
+      </div>
+
+      <div class="card">
+        <div class="img"></div>
+        <h4>The Magic Bedtime</h4>
+        <p>Perfect for bedtime routine.</p>
+      </div>
+
+      <div class="card">
+        <div class="img"></div>
+        <h4>The World of Emotions</h4>
+        <p>Helping kids understand feelings.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="preview" id="preview">
+  <div class="container">
+    <h3>Create Your Free Preview</h3>
+
+    <form id="previewForm">
+      <input type="text" placeholder="Child's Name" required />
+      <input type="number" placeholder="Age" required />
+      <button type="submit" class="btn btn-big">Generate Preview</button>
+    </form>
+
+    <div id="result" class="result hidden">
+      <h4>Preview Ready!</h4>
+      <p>Your personalized story is ready to view.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 MyMagicStoryBooks</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
