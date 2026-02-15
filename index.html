@@ -29,18 +29,19 @@
 
     <div class="grid">
       <div class="card">
-        <img class="img" src="https://images.unsplash.com/photo-1600508774634-4e11d34730e2?auto=format&fit=crop&w=1600&q=80" alt="The Brave Little Hero" />
+        <img class="img" src="https://picsum.photos/seed/hero-book/800/500" alt="Book cover" />
+        <h4>The Brave Little Hero</h4>
         <p>Build confidence and courage.</p>
       </div>
 
       <div class="card">
-        <img class="img" src="https://images.unsplash.com/photo-1522661067900-ab829854a57f?auto=format&fit=crop&w=1600&q=80" alt="The Magic Bedtime" />
+        <img class="img" src="https://picsum.photos/seed/bedtime-book/800/500" alt="Book cover" />
         <h4>The Magic Bedtime</h4>
         <p>Perfect for bedtime routine.</p>
       </div>
 
       <div class="card">
-       <img class="img" src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1600&q=80" alt="The World of Emotions" />
+        <img class="img" src="https://picsum.photos/seed/emotions-book/800/500" alt="Book cover" />
         <h4>The World of Emotions</h4>
         <p>Helping kids understand feelings.</p>
       </div>
@@ -53,76 +54,54 @@
     <h3>Create Your Free Preview</h3>
 
     <form id="previewForm" class="previewForm">
-  <input id="kidName" type="text" placeholder="Child's Name" required />
-  <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
+      <input id="kidName" type="text" placeholder="Child's Name" required />
+      <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
 
-  <label class="filePick">
-    <input id="kidPhoto" type="file" accept="image/*" required />
-    <span>Upload Photo</span>
-  </label>
+      <label class="filePick">
+        <input id="kidPhoto" type="file" accept="image/*" required />
+        <span>Upload Photo</span>
+      </label>
 
-  <button type="submit" class="btn btn-big">Create Preview</button>
-</form>
+      <button type="submit" class="btn btn-big">Create Preview</button>
+    </form>
 
-<div id="result" class="result hidden">
-  <h4>Your Preview</h4>
+    <!-- RESULT (THIS MUST EXIST) -->
+    <div id="result" class="result hidden">
+      <h4>Your Preview</h4>
 
-  <div class="ba">
-    <div class="baCol">
-      <div class="baLabel">Before</div>
-      <img id="beforeImg" class="baImg" alt="Before" />
-    </div>
+      <div class="ba">
+        <div class="baCol">
+          <div class="baLabel">Before</div>
+          <img id="beforeImg" class="baImg" alt="Before" />
+        </div>
 
-    <div class="baCol">
-      <div class="baLabel">After (demo)</div>
-      <img id="afterImg" class="baImg" alt="After" />
-    </div>
-  </div>
+        <div class="baCol">
+          <div class="baLabel">After (demo)</div>
+          <img id="afterImg" class="baImg" alt="After" />
+        </div>
+      </div>
 
-  <div class="pages">
-    <div class="page">
-      <div class="pageTitle">Page 1 (demo)</div>
-      <img id="page1" class="pageImg" alt="Page 1" />
-    </div>
-    <div class="page">
-      <div class="pageTitle">Page 2 (demo)</div>
-      <img id="page2" class="pageImg" alt="Page 2" />
-    </div>
-  </div>
+      <div class="pages">
+        <div class="page">
+          <div class="pageTitle">Page 1 (demo)</div>
+          <img id="page1" class="pageImg" alt="Page 1" />
+        </div>
 
-  <p class="smallNote">
-    Demo preview: next step is connecting real AI generation (face + outfit + pages).
-  </p>
-</div>
+        <div class="page">
+          <div class="pageTitle">Page 2 (demo)</div>
+          <img id="page2" class="pageImg" alt="Page 2" />
+        </div>
+      </div>
 
-<div id="result" class="result hidden">
-  <h4>Your Preview</h4>
-
-  <div class="ba">
-    <div class="baCol">
-      <div class="baLabel">Before</div>
-      <img id="beforeImg" class="baImg" />
-    </div>
-
-    <div class="baCol">
-      <div class="baLabel">After (demo)</div>
-      <img id="afterImg" class="baImg" />
+      <p class="smallNote">Demo preview — real AI generation comes next.</p>
     </div>
   </div>
+</section>
 
-  <div class="pages">
-    <div class="page">
-      <div class="pageTitle">Page 1 (demo)</div>
-      <img id="page1" class="pageImg" />
-    </div>
+<footer class="footer">
+  <p>© 2026 MyMagicStoryBooks</p>
+</footer>
 
-    <div class="page">
-      <div class="pageTitle">Page 2 (demo)</div>
-      <img id="page2" class="pageImg" />
-    </div>
-  </div>
-
-  <p class="smallNote">
-    Demo preview – real AI generation comes next.
-  </p>
-</div>
+<script src="script.js"></script>
+</body>
+</html>
