@@ -1,4 +1,8 @@
-import fetch from "node-fetch";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -6,47 +10,42 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { imageBase64, theme, childName, age } = req.body;
+    const { imageBase64, childName, age, theme } = req.body;
 
     if (!imageBase64) {
-      return res.status(400).json({ error: "Image not provided" });
+      return res.status(400).json({ error: "No image provided" });
     }
 
     const prompt = `
-    Create a colorful children's book illustration.
-    Style: soft watercolor, cartoon, storybook.
+    Create a children's book illustration.
+    Style: cute, colorful, soft, storybook illustration.
+    The child is ${childName}, ${age} years old.
     Theme: ${theme}.
-    Child name: ${childName}, age ${age}.
-    The child should look friendly, cute, and illustrated.
-    Background magical, soft lighting, pastel colors.
+    Turn the real child into a cartoon-style character.
+    Big eyes, soft lighting, pastel colors, magical atmosphere.
+    Background matches a children's storybook.
+    No text in the image.
     `;
 
-    const openaiRes = await fetch("https://api.openai.com/v1/images/edits", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-image-1",
-        prompt,
-        image: imageBase64,
-        size: "1024x1024"
-      })
+    const result = await openai.images.generate({
+      model: "gpt-image-1",
+      prompt,
+      size: "1024x1024",
+      image: imageBase64.replace(/^data:image\/\w+;base64,/, "")
     });
 
-    const data = await openaiRes.json();
+    const image = result.data[0].b64_json;
 
-    if (!data.data || !data.data[0]) {
-      return res.status(500).json({ error: "Image generation failed" });
-    }
-
-    return res.status(200).json({
-      image: data.data[0].url
+    res.status(200).json({
+      success: true,
+      image: `data:image/png;base64,${image}`
     });
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
+    console.error("IMAGE ERROR:", error);
+    res.status(500).json({
+      error: "Error generating illustration",
+      details: error.message
+    });
   }
 }
