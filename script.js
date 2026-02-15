@@ -1,27 +1,32 @@
-const form = document.getElementById("previewForm");
-const result = document.getElementById("result");
-const beforeImg = document.getElementById("beforeImg");
-const afterImg = document.getElementById("afterImg");
-const page1 = document.getElementById("page1");
-const page2 = document.getElementById("page2");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("previewForm");
+  const result = document.getElementById("result");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  const beforeImg = document.getElementById("beforeImg");
+  const afterImg = document.getElementById("afterImg");
+  const page1 = document.getElementById("page1");
+  const page2 = document.getElementById("page2");
 
-  const fileInput = document.getElementById("kidPhoto");
-  const file = fileInput.files && fileInput.files[0];
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  if (!file) return;
+    const fileInput = document.getElementById("kidPhoto");
+    const file = fileInput.files && fileInput.files[0];
 
-  // BEFORE: show uploaded photo
-  const url = URL.createObjectURL(file);
-  beforeImg.src = url;
+    if (!file) {
+      alert("Please upload a photo first.");
+      return;
+    }
 
-  // AFTER + PAGES: demo images (until AI is connected)
-  afterImg.src = "https://picsum.photos/seed/after-kid/700/700";
-  page1.src = "https://picsum.photos/seed/page-1/900/600";
-  page2.src = "https://picsum.photos/seed/page-2/900/600";
+    // BEFORE: show uploaded photo
+    beforeImg.src = URL.createObjectURL(file);
 
-  result.classList.remove("hidden");
-  result.scrollIntoView({ behavior: "smooth", block: "start" });
+    // AFTER + PAGES: demo images (until AI is connected)
+    afterImg.src = "https://picsum.photos/seed/after-kid/800/800";
+    page1.src = "https://picsum.photos/seed/story-page-1/1200/800";
+    page2.src = "https://picsum.photos/seed/story-page-2/1200/800";
+
+    result.classList.remove("hidden");
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 });
