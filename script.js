@@ -18,10 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // BEFORE: show uploaded photo
     beforeImg.src = URL.createObjectURL(file);
 
-    // AFTER + PAGES: demo images
     afterImg.src = "https://picsum.photos/seed/after-kid/900/900";
     page1.src = "https://picsum.photos/seed/story-page-1/1200/800";
     page2.src = "https://picsum.photos/seed/story-page-2/1200/800";
