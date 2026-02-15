@@ -20,6 +20,7 @@
 
     <div class="headerBtns">
       <a class="btn ghost" href="#themes">Themes</a>
+      <a class="btn ghost" href="#examples">Examples</a>
       <a class="btn" href="#preview">Create Preview</a>
     </div>
   </div>
@@ -65,7 +66,6 @@
   </div>
 </section>
 
-<!-- THEMES -->
 <section class="themes" id="themes">
   <div class="container">
     <div class="sectionHead">
@@ -73,9 +73,7 @@
       <p>Pick one of 8 themes. The preview will use the selected theme + your child’s photo.</p>
     </div>
 
-    <div class="themeGrid" id="themeGrid">
-      <!-- Filled by JS -->
-    </div>
+    <div class="themeGrid" id="themeGrid"></div>
 
     <div class="hint">
       Tip: Click a theme to select it. Then go to “Create Preview”.
@@ -83,7 +81,6 @@
   </div>
 </section>
 
-<!-- EXAMPLES -->
 <section class="examples" id="examples">
   <div class="container">
     <div class="sectionHead">
@@ -91,13 +88,10 @@
       <p>These examples show how the book looks. Your child’s photo will be placed on the cover and pages.</p>
     </div>
 
-    <div class="exampleGrid" id="exampleGrid">
-      <!-- Filled by JS -->
-    </div>
+    <div class="exampleGrid" id="exampleGrid"></div>
   </div>
 </section>
 
-<!-- PREVIEW -->
 <section class="preview" id="preview">
   <div class="container">
     <div class="sectionHead">
@@ -127,6 +121,18 @@
       <div class="resultHead">
         <h3>Your Book Preview</h3>
         <div class="miniNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</div>
+      </div>
+
+      <div class="baRow">
+        <div class="baBox">
+          <div class="baTitle">Before (Your Upload)</div>
+          <img id="beforeUpload" class="baImg2" alt="Before upload" />
+        </div>
+
+        <div class="baBox">
+          <div class="baTitle">After (Book Style)</div>
+          <img id="afterBook" class="baImg2" alt="After book style" />
+        </div>
       </div>
 
       <div class="previewGrid">
@@ -164,37 +170,6 @@
     </div>
   </div>
 </footer>
-
-<!-- Modal -->
-<div class="modal hidden" id="modal">
-  <div class="modalBackdrop" id="modalBackdrop"></div>
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="modalTitle" id="modalTitle">Example Book</div>
-      <button class="xBtn" id="modalClose">✕</button>
-    </div>
-
-    <div class="modalGrid">
-      <div class="previewCard">
-        <div class="previewTitle">Cover</div>
-        <img id="modalCover" class="previewImg" alt="Example cover" />
-      </div>
-      <div class="previewCard">
-        <div class="previewTitle">Page 1</div>
-        <img id="modalPage1" class="previewImg" alt="Example page 1" />
-      </div>
-      <div class="previewCard">
-        <div class="previewTitle">Page 2</div>
-        <img id="modalPage2" class="previewImg" alt="Example page 2" />
-      </div>
-    </div>
-
-    <div class="storyText">
-      <div class="storyTitle" id="modalStoryTitle"></div>
-      <div class="storyLines" id="modalStoryLines"></div>
-    </div>
-  </div>
-</div>
 
 <script src="script.js"></script>
 </body>
