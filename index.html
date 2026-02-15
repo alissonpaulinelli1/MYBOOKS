@@ -2,136 +2,376 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MyMagicStoryBooks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyMagicStoryBooks</title>
 
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- Fonts (kid-friendly) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container headerInner">
+      <div class="brand">
+        <span class="sparkle">✨</span>
+        <span class="brandName">MyMagicStoryBooks</span>
+      </div>
 
-<header class="header">
-  <h1>✨ MyMagicStoryBooks</h1>
-  <p>Turn your child into the hero of a magical story</p>
-</header>
-
-<!-- ================= PREVIEW FORM ================= -->
-<section class="previewForm">
-  <input id="childName" type="text" placeholder="Child's Name" />
-  <input id="childAge" type="number" placeholder="Age" />
-
-  <label class="filePick">
-    Upload Photo
-    <input id="kidPhoto" type="file" accept="image/*" />
-  </label>
-
-  <button id="generateBtn">Create Preview</button>
-</section>
-
-<!-- ================= BOOK PREVIEW ================= -->
-<section class="preview" id="preview">
-  <h2>Your Book Preview</h2>
-  <p class="previewNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</p>
-
-  <div class="previewGrid">
-
-    <!-- BEFORE -->
-    <div class="previewCard beforeCard">
-      <p class="cardTitle">Before (Your Upload)</p>
-      <img id="beforeImg" alt="Before upload preview" />
+      <nav class="nav">
+        <a class="navLink" href="#themes">Themes</a>
+        <a class="navLink" href="#examples">Examples</a>
+        <a class="btn btnSmall" href="#preview">Create Preview</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- AFTER -->
-    <div class="previewCard afterCard">
-      <p class="cardTitle">After (Book Style)</p>
-      <div class="bookFrame">
-        <img id="afterImg" alt="After book style preview" />
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container heroInner">
+      <div class="heroLeft">
+        <h1>Turn your child into the hero of their own magical story</h1>
+        <p class="heroSub">
+          Choose a theme, upload a photo, and generate a colorful preview (cover + pages).
+          <br/>Next step: real AI illustrations from your upload.
+        </p>
+
+        <div class="heroCtas">
+          <a class="btn" href="#preview">Generate Preview</a>
+          <a class="btn btnGhost" href="#themes">See Themes</a>
+        </div>
+
+        <ul class="heroBullets">
+          <li>⚡ Instant preview</li>
+          <li>🧒 Kid-friendly design</li>
+          <li>📚 8 story themes</li>
+        </ul>
+      </div>
+
+      <div class="heroRight">
+        <div class="heroCard">
+          <div class="heroCardTop">
+            <span class="pill">FREE PREVIEW</span>
+            <span class="pill soft">Your Child’s Book</span>
+          </div>
+          <div class="heroMock">
+            <div class="mockCover">
+              <div class="mockCircle"></div>
+              <div class="mockLines">
+                <div class="line"></div>
+                <div class="line short"></div>
+                <div class="line"></div>
+              </div>
+            </div>
+            <div class="mockPages">
+              <div class="pageMini"></div>
+              <div class="pageMini"></div>
+            </div>
+          </div>
+          <p class="heroNote">Upload photo → preview appears</p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- COVER -->
-    <div class="previewCard">
-      <p class="cardTitle">Cover</p>
-      <div class="bookFrame placeholder">Generated cover</div>
-    </div>
+  <!-- Themes -->
+  <section class="themes" id="themes">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>8 Themes</h2>
+        <p>Choose one theme (English / Portuguese). Your preview will use it.</p>
+      </div>
 
-    <!-- PAGE 1 -->
-    <div class="previewCard">
-      <p class="cardTitle">Page 1</p>
-      <div class="bookFrame placeholder">Generated page</div>
-    </div>
+      <div class="themesGrid">
+        <button class="themeCard" type="button" data-theme="Adventure / Aventura">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1520975869018-6c2d3a0a7a4f?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Adventure / Aventura</div>
+            <div class="themeDesc">Heroic jungle adventure</div>
+          </div>
+        </button>
 
-    <!-- PAGE 2 -->
-    <div class="previewCard">
-      <p class="cardTitle">Page 2</p>
-      <div class="bookFrame placeholder">Generated page</div>
-    </div>
+        <button class="themeCard" type="button" data-theme="Bedtime / Dormir">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1503455637927-730bce8583c0?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Bedtime / Dormir</div>
+            <div class="themeDesc">Sleepy stars & calm night</div>
+          </div>
+        </button>
 
-  </div>
-</section>
+        <button class="themeCard" type="button" data-theme="Animals / Animais">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1525253086316-d0c936c814f8?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Animals / Animais</div>
+            <div class="themeDesc">Friendly animals world</div>
+          </div>
+        </button>
 
-  <h2>Your Book Preview</h2>
-  <p class="smallNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</p>
+        <button class="themeCard" type="button" data-theme="Friendship / Amizade">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Friendship / Amizade</div>
+            <div class="themeDesc">Best friends & kindness</div>
+          </div>
+        </button>
 
-  <!-- ===== BEFORE / AFTER ===== -->
-  <div class="ba">
+        <button class="themeCard" type="button" data-theme="School / Escola">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">School / Escola</div>
+            <div class="themeDesc">First day confidence</div>
+          </div>
+        </button>
 
-    <!-- BEFORE -->
-    <div class="baCol">
-      <p class="baLabel">Before (Your Upload)</p>
-      <img id="beforeImg" class="baImg" alt="Before upload">
-    </div>
+        <button class="themeCard" type="button" data-theme="Emotions / Emoções">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Emotions / Emoções</div>
+            <div class="themeDesc">Feelings & empathy</div>
+          </div>
+        </button>
 
-    <!-- AFTER -->
-    <div class="baCol">
-      <p class="baLabel">After (Book Style)</p>
+        <button class="themeCard" type="button" data-theme="Space / Espaço">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Space / Espaço</div>
+            <div class="themeDesc">Rocket trip to the stars</div>
+          </div>
+        </button>
 
-      <!-- ✅ AFTER CARD CORRETO -->
-      <div class="afterCard">
-        <img id="afterImg" class="baImg" alt="After preview">
+        <button class="themeCard" type="button" data-theme="Princess & Castle / Princesa e Castelo">
+          <div class="themeImg" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=60');"></div>
+          <div class="themeBody">
+            <div class="themeTitle">Princess & Castle / Princesa e Castelo</div>
+            <div class="themeDesc">Royal magical journey</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="themePicker">
+        <div class="themePickerBox">
+          <div class="themePickerLabel">Selected theme:</div>
+          <select id="themeSelect">
+            <option>Adventure / Aventura</option>
+            <option>Bedtime / Dormir</option>
+            <option>Animals / Animais</option>
+            <option>Friendship / Amizade</option>
+            <option>School / Escola</option>
+            <option>Emotions / Emoções</option>
+            <option>Space / Espaço</option>
+            <option>Princess & Castle / Princesa e Castelo</option>
+          </select>
+          <div class="themeTip">Tip: pick a theme here, then go to “Create Preview”.</div>
+        </div>
       </div>
     </div>
+  </section>
 
-  </div>
+  <!-- Examples -->
+  <section class="examples" id="examples">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Before & After (Examples)</h2>
+        <p class="muted">
+          Examples are demo images. Your real “After” will be generated from your uploaded photo on the preview section.
+        </p>
+      </div>
 
-  <!-- ===== COVER + PAGES ===== -->
-  <div class="pages">
+      <div class="exGrid">
+        <!-- Example 1 -->
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After (book)</span>
+          </div>
+          <div class="exImgs">
+            <!-- BEFORE: kid photo (demo) -->
+            <img class="exImg" src="https://images.unsplash.com/photo-1503455637927-730bce8583c0?auto=format&fit=crop&w=900&q=60" alt="Child photo before example 1">
+            <!-- AFTER: illustration style (demo) -->
+            <img class="exImg" src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=900&q=60" alt="Book illustration after example 1">
+          </div>
+          <div class="exCaption">Bedtime Book — Example</div>
+        </div>
 
-    <div class="page">
-      <p class="pageTitle">Cover</p>
-      <div class="previewCard small">
-        <div class="fakePage">Generated cover</div>
+        <!-- Example 2 -->
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After (book)</span>
+          </div>
+          <div class="exImgs">
+            <img class="exImg" src="https://images.unsplash.com/photo-1520975869018-6c2d3a0a7a4f?auto=format&fit=crop&w=900&q=60" alt="Child photo before example 2">
+            <img class="exImg" src="https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&w=900&q=60" alt="Book illustration after example 2">
+          </div>
+          <div class="exCaption">Adventure Book — Example</div>
+        </div>
+
+        <!-- Example 3 -->
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After (book)</span>
+          </div>
+          <div class="exImgs">
+            <img class="exImg" src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=900&q=60" alt="Child photo before example 3">
+            <img class="exImg" src="https://images.unsplash.com/photo-1520697830682-bbb6e85e2b0d?auto=format&fit=crop&w=900&q=60" alt="Book illustration after example 3">
+          </div>
+          <div class="exCaption">Friendship Book — Example</div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="page">
-      <p class="pageTitle">Page 1</p>
-      <div class="previewCard small">
-        <div class="fakePage">Generated page</div>
+  <!-- Preview -->
+  <section class="preview" id="preview">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Create Your Free Preview</h2>
+        <p>Enter name + age, upload a photo, choose theme, and create the preview.</p>
+      </div>
+
+      <!-- Form row -->
+      <div class="previewBar">
+        <input id="childName" class="input" type="text" placeholder="Child's Name" />
+        <input id="age" class="input" type="number" min="0" max="18" placeholder="Age" />
+
+        <!-- Upload button -->
+        <label class="filePick">
+          Upload Photo
+          <input id="kidPhoto" type="file" accept="image/*" />
+        </label>
+
+        <button id="generateBtn" class="btn">Create Preview</button>
+      </div>
+
+      <div class="previewWrap">
+        <div class="previewHeader">
+          <h3>Your Book Preview</h3>
+          <p class="muted">Cover + 2 pages (demo). Next step is adding real AI illustrations.</p>
+        </div>
+
+        <!-- Cards grid -->
+        <div class="previewGrid">
+          <!-- BEFORE -->
+          <div class="previewCard">
+            <div class="cardTitle">Before (Your Upload)</div>
+            <div class="cardBody">
+              <img id="beforeImg" class="cardImg" src="" alt="Before upload" style="display:none;">
+              <div class="cardPlaceholder">
+                <div class="phTitle">Before (your upload)</div>
+                <div class="phSub">Upload a photo above</div>
+                <div class="phDots">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AFTER (Book Style) -->
+          <div class="previewCard">
+            <div class="cardTitle">After (Book Style)</div>
+            <div class="cardBody">
+              <!-- do jeito que você pediu -->
+              <div class="afterCard">
+                <p class="mutedMini">Preview will appear here</p>
+                <img id="afterImg" class="cardImg" src="" alt="After preview" style="display:none;">
+              </div>
+
+              <div class="cardPlaceholder">
+                <div class="phTitle">After (book style)</div>
+                <div class="phSub">Preview will appear here</div>
+                <div class="phDots">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COVER -->
+          <div class="previewCard">
+            <div class="cardTitle">Cover</div>
+            <div class="cardBody">
+              <img id="coverImg" class="cardImg" src="" alt="Cover preview" style="display:none;">
+              <div class="cardPlaceholder">
+                <div class="phTitle">Cover</div>
+                <div class="phSub">Generated cover</div>
+                <div class="phDots">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 1 -->
+          <div class="previewCard">
+            <div class="cardTitle">Page 1</div>
+            <div class="cardBody">
+              <img id="page1Img" class="cardImg" src="" alt="Page 1 preview" style="display:none;">
+              <div class="cardPlaceholder">
+                <div class="phTitle">Page 1</div>
+                <div class="phSub">Generated page</div>
+                <div class="phDots">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 2 -->
+          <div class="previewCard">
+            <div class="cardTitle">Page 2</div>
+            <div class="cardBody">
+              <img id="page2Img" class="cardImg" src="" alt="Page 2 preview" style="display:none;">
+              <div class="cardPlaceholder">
+                <div class="phTitle">Page 2</div>
+                <div class="phSub">Generated page</div>
+                <div class="phDots">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="smallNote">
+          ✨ After will become a real children’s book illustration once you connect the AI API (Vercel serverless).
+        </p>
       </div>
     </div>
+  </section>
 
-    <div class="page">
-      <p class="pageTitle">Page 2</p>
-      <div class="previewCard small">
-        <div class="fakePage">Generated page</div>
+  <footer class="footer">
+    <div class="container footerInner">
+      <div>© 2026 MyMagicStoryBooks</div>
+      <div class="footerLinks">
+        <a href="#themes">Themes</a>
+        <a href="#examples">Examples</a>
+        <a href="#preview">Create Preview</a>
       </div>
     </div>
+  </footer>
 
-  </div>
+  <script src="script.js"></script>
 
-</section>
-
-<footer class="footer">
-  © 2026 MyMagicStoryBooks
-</footer>
-
-<!-- JS -->
-<script src="script.js"></script>
-
+  <!-- Theme click helper (não atrapalha seu script.js) -->
+  <script>
+    (function(){
+      const cards = document.querySelectorAll(".themeCard");
+      const select = document.getElementById("themeSelect");
+      cards.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const t = btn.getAttribute("data-theme");
+          if (!t) return;
+          if (select) select.value = t;
+          // scroll suave pro preview
+          document.getElementById("preview")?.scrollIntoView({ behavior:"smooth", block:"start" });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
