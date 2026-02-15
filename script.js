@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const page1 = document.getElementById("page1");
   const page2 = document.getElementById("page2");
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const fileInput = document.getElementById("kidPhoto");
@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // BEFORE: show uploaded photo
     beforeImg.src = URL.createObjectURL(file);
 
-    // AFTER + PAGES: demo images (until AI is connected)
-    afterImg.src = "https://picsum.photos/seed/after-kid/800/800";
+    // AFTER + PAGES: demo images
+    afterImg.src = "https://picsum.photos/seed/after-kid/900/900";
     page1.src = "https://picsum.photos/seed/story-page-1/1200/800";
     page2.src = "https://picsum.photos/seed/story-page-2/1200/800";
 
