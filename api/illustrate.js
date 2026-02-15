@@ -10,43 +10,38 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { imageBase64, childName, age, theme } = req.body;
+    const { imageBase64, name, age, theme } = req.body;
 
-    if (!imageBase64) {
-      return res.status(400).json({ error: "Image is required" });
+    if (!imageBase64 || !imageBase64.startsWith("data:image/")) {
+      return res.status(400).json({ error: "Invalid image" });
     }
 
     const prompt = `
-    Turn this real child into a cute children's book illustration.
+Children's book illustration.
+Cute, colorful, soft pastel storybook style.
+The child is named ${name}, ${age} years old.
+Theme: ${theme}.
+Turn the real child into a cartoon character.
+Big expressive eyes, soft lighting, magical atmosphere.
+No text in the image.
+`;
 
-    Style: Disney / Pixar / storybook
-    Character: ${childName}, ${age} years old
-    Theme: ${theme}
-
-    Big expressive eyes, soft pastel colors, magical lighting,
-    friendly proportions, watercolor storybook background.
-
-    No text. No watermark. No realism.
-    `;
-
-    const base64Image = imageBase64.replace(/^data:image\/\w+;base64,/, "");
-
-    const result = await openai.images.edit({
+    const result = await openai.images.generate({
       model: "gpt-image-1",
       prompt,
-      image: Buffer.from(base64Image, "base64"),
-      size: "1024x1024"
+      size: "1024x1024",
+      image: imageBase64
     });
 
-    const image = result.data[0].b64_json;
+    const img = result.data[0].b64_json;
 
     res.status(200).json({
       success: true,
-      image: `data:image/png;base64,${image}`
+      image: `data:image/png;base64,${img}`
     });
 
   } catch (err) {
-    console.error("ILLUSTRATE ERROR:", err);
+    console.error(err);
     res.status(500).json({
       error: "Error generating illustration",
       details: err.message
