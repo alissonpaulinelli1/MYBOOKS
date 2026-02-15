@@ -221,3 +221,105 @@ button {
     grid-template-columns: 1fr 1fr;
   }
 }
+/* =========================
+   PREVIEW SECTION
+========================= */
+
+.preview {
+  margin-top: 60px;
+}
+
+.preview h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.previewNote {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* GRID */
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* CARD BASE */
+.previewCard {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* TITLES */
+.cardTitle {
+  font-weight: 800;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* IMAGE BASE */
+.previewCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  display: none;
+}
+
+/* BOOK FRAME (AFTER / COVER / PAGES) */
+.bookFrame {
+  width: 100%;
+  height: 260px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,#c7d2fe,#fde68a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.5);
+}
+
+/* PLACEHOLDER */
+.bookFrame.placeholder {
+  background: linear-gradient(135deg,#e5e7eb,#f3f4f6);
+}
+
+/* BEFORE CARD IMAGE */
+.beforeCard img {
+  display: block;
+  height: 260px;
+}
+
+/* AFTER CARD BOOK STYLE */
+.afterCard .bookFrame {
+  background: linear-gradient(135deg,#bbf7d0,#fde68a,#c7d2fe);
+}
+
+.afterCard img {
+  display: block;
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .bookFrame {
+    height: 220px;
+  }
+}
