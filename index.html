@@ -2,188 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MyMagicStoryBooks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <title>MyMagicStoryBooks</title>
+  <link rel="stylesheet" href="/style.css?v=20">
 </head>
 <body>
 
-<header class="header">
-  <div class="container headerRow">
-    <div class="brand">
-      <div class="spark">✨</div>
-      <div>
-        <div class="logo">MyMagicStoryBooks</div>
+  <header class="header">
+    <div class="container headerRow">
+      <div class="brand">
+        <div class="logo">✨ MyMagicStoryBooks</div>
         <div class="tagline">Turn your child into the hero of a magical story</div>
       </div>
-    </div>
 
-    <div class="headerBtns">
-      <a class="btn ghost" href="#themes">Themes</a>
-      <a class="btn ghost" href="#examples">Examples</a>
-      <a class="btn" href="#preview">Create Preview</a>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="container heroGrid">
-    <div class="heroLeft">
-      <h1>Create a personalized children’s book with your child as the main character</h1>
-      <p>Choose a theme, upload a photo, and instantly generate a colorful preview with a cover + story pages.</p>
-
-      <div class="heroCtas">
-        <a class="btn big" href="#preview">Generate Preview</a>
-        <a class="btn ghost big" href="#themes">See Themes</a>
-      </div>
-
-      <div class="trustRow">
-        <div class="pill">⚡ Instant preview</div>
-        <div class="pill">🎨 Kid-friendly design</div>
-        <div class="pill">📚 8 story themes</div>
+      <div class="headerBtns">
+        <a class="btn ghost" href="#themes">Themes</a>
+        <a class="btn ghost" href="#examples">Examples</a>
+        <a class="btn" href="#preview">Create Preview</a>
       </div>
     </div>
+  </header>
 
-    <div class="heroRight">
-      <div class="mockBook">
-        <div class="mockTop">
-          <div class="mockBadge">FREE PREVIEW</div>
-          <div class="mockTitle">Your Child’s Book</div>
+  <section class="hero" id="top">
+    <div class="container heroGrid">
+      <div>
+        <h1>Create a personalized children's book with your child as the main character</h1>
+        <p>Choose a theme, upload a photo, and instantly generate a colorful preview with a cover + story pages (demo).</p>
+
+        <div class="heroActions">
+          <a class="btn big" href="#preview">Generate Preview</a>
+          <a class="btn big ghost" href="#themes">See Themes</a>
         </div>
-        <div class="mockBody">
-          <div class="mockCover">
-            <div class="mockPhoto"></div>
-            <div class="mockCoverText">Cover + Pages</div>
+
+        <ul class="heroList">
+          <li>✅ Instant preview</li>
+          <li>✅ Kid-friendly design</li>
+          <li>✅ 8 story themes</li>
+        </ul>
+      </div>
+
+      <div class="heroCard">
+        <div class="heroCardTitle">FREE PREVIEW</div>
+        <div class="heroCardText">
+          Your Child's Book<br>
+          Cover + Pages<br>
+          Upload photo → preview appears
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="themes" id="themes">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>8 Themes</h2>
+        <p>Choose one theme (English / Portuguese). Your preview will use it.</p>
+      </div>
+
+      <div class="themeCard">
+        <div class="selectedThemeLine" id="selectedThemeText">Selected theme: Adventure / Aventura</div>
+
+        <div class="themeRow">
+          <select id="themeSelect"></select>
+          <div class="tip">Tip: pick a theme here, then go to “Create Preview”.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="examples" id="examples">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Before & After (Examples)</h2>
+        <p>See how a child becomes the hero of their own story ✨</p>
+      </div>
+
+      <div class="exGrid">
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After</span>
           </div>
-          <div class="mockPages">
-            <div class="mockPage"></div>
-            <div class="mockPage"></div>
+          <div class="exImgs">
+            <img class="exImg" src="https://picsum.photos/seed/kid_before_1/700/700" alt="Before example 1">
+            <img class="exImg" src="https://picsum.photos/seed/book_after_1/700/700" alt="After example 1">
+          </div>
+          <div class="exCaption">Adventure Book — Example</div>
+        </div>
+
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After</span>
+          </div>
+          <div class="exImgs">
+            <img class="exImg" src="https://picsum.photos/seed/kid_before_2/700/700" alt="Before example 2">
+            <img class="exImg" src="https://picsum.photos/seed/book_after_2/700/700" alt="After example 2">
+          </div>
+          <div class="exCaption">Bedtime Book — Example</div>
+        </div>
+
+        <div class="exCard">
+          <div class="exTop">
+            <span class="tag before">Before</span>
+            <span class="tag after">After</span>
+          </div>
+          <div class="exImgs">
+            <img class="exImg" src="https://picsum.photos/seed/kid_before_3/700/700" alt="Before example 3">
+            <img class="exImg" src="https://picsum.photos/seed/book_after_3/700/700" alt="After example 3">
+          </div>
+          <div class="exCaption">Animals Book — Example</div>
+        </div>
+      </div>
+
+      <div class="note">
+        * Examples are demo images. Your real “After” will be generated from your uploaded photo on the preview section.
+      </div>
+    </div>
+  </section>
+
+  <section class="preview" id="preview">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Create Your Free Preview</h2>
+        <p>Enter name + age, upload a photo, choose theme, and create the preview.</p>
+      </div>
+
+      <div class="formCard">
+        <div class="previewForm">
+          <input id="kidName" placeholder="Child's Name" />
+          <input id="kidAge" placeholder="Age" type="number" min="1" max="18" />
+          <label class="filePick">
+            Upload Photo
+            <input id="kidPhoto" type="file" accept="image/*" />
+          </label>
+          <button class="btn big" id="createBtn">Create Preview</button>
+        </div>
+      </div>
+
+      <div class="result">
+        <div class="resultHead">
+          <h3>Your Book Preview</h3>
+          <div class="miniNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</div>
+        </div>
+
+        <div class="baRow">
+          <div class="baBox">
+            <div class="baTitle">Before (Your Upload)</div>
+            <img id="beforeImg" class="baImg2" alt="Before upload" />
+          </div>
+
+          <div class="baBox">
+            <div class="baTitle">After (Book Style)</div>
+            <img id="afterImg" class="baImg2" alt="After book style" />
           </div>
         </div>
-        <div class="mockBottom">Upload photo → book preview appears</div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="themes" id="themes">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>8 Themes</h2>
-      <p>Choose one theme (English / Portuguese). Your preview will use it.</p>
-    </div>
+        <div class="previewGrid">
+          <div class="previewCard">
+            <div class="previewTitle">Cover</div>
+            <img id="coverImg" class="previewImg" alt="Cover preview" />
+          </div>
 
-    <div class="formCard">
-      <div class="selectedThemeLine" id="selectedThemeText">
-        Selected theme: Adventure / Aventura
-      </div>
+          <div class="previewCard">
+            <div class="previewTitle">Page 1</div>
+            <img id="page1Img" class="previewImg" alt="Page 1 preview" />
+          </div>
 
-      <!-- ✅ IMPORTANT: script.js needs themeSelect -->
-      <div style="display:flex;justify-content:center;margin-top:10px;">
-        <select id="themeSelect" style="padding:12px 14px;border-radius:999px;border:1px solid rgba(31,36,64,.14);background:rgba(255,255,255,.86);font-weight:900;min-width:320px;">
-          <!-- Options will be filled automatically by script.js -->
-        </select>
-      </div>
-
-      <div class="hint" style="text-align:center;margin-top:10px;">
-        Tip: pick a theme here, then go to “Create Preview”.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="examples" id="examples">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Examples</h2>
-      <p>After you generate a preview, you’ll see the book layout (Cover + Pages).</p>
-    </div>
-
-    <div class="formCard" style="text-align:center;">
-      <div class="hint">Examples grid is optional now. The real “examples” come from your preview.</div>
-    </div>
-  </div>
-</section>
-
-<section class="preview" id="preview">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Create Your Free Preview</h2>
-      <p>Enter name + age, upload a photo, choose theme, and create the preview.</p>
-    </div>
-
-    <div class="formCard">
-      <!-- ✅ IMPORTANT IDs: kidName, kidAge, kidPhoto, createBtn -->
-      <form class="previewForm" onsubmit="return false;">
-        <input id="kidName" type="text" placeholder="Child's Name" required />
-        <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
-
-        <label class="filePick">
-          <input id="kidPhoto" type="file" accept="image/*" required />
-          <span>Upload Photo</span>
-        </label>
-
-        <button id="createBtn" class="btn big" type="button">Create Preview</button>
-      </form>
-    </div>
-
-    <!-- ✅ PREVIEW OUTPUT -->
-    <div class="result" style="margin-top:16px;">
-      <div class="resultHead">
-        <h3>Your Book Preview</h3>
-        <div class="miniNote">Cover + 2 pages (demo). Next step is adding real AI illustrations.</div>
-      </div>
-
-      <!-- ✅ IMPORTANT IDs: beforeImg, afterImg -->
-      <div class="baRow">
-        <div class="baBox">
-          <div class="baTitle">Before (Your Upload)</div>
-          <img id="beforeImg" class="baImg2" alt="Before upload" />
+          <div class="previewCard">
+            <div class="previewTitle">Page 2</div>
+            <img id="page2Img" class="previewImg" alt="Page 2 preview" />
+          </div>
         </div>
 
-        <div class="baBox">
-          <div class="baTitle">After (Book Style)</div>
-          <img id="afterImg" class="baImg2" alt="After book style" />
+        <div class="storyText">
+          <div class="storyTitle" id="storyTitle">Story</div>
+          <div class="storyLines" id="storyBullets"></div>
         </div>
-      </div>
-
-      <!-- ✅ IMPORTANT IDs: coverImg, page1Img, page2Img -->
-      <div class="previewGrid">
-        <div class="previewCard">
-          <div class="previewTitle">Cover</div>
-          <img id="coverImg" class="previewImg" alt="Cover preview" />
-        </div>
-
-        <div class="previewCard">
-          <div class="previewTitle">Page 1</div>
-          <img id="page1Img" class="previewImg" alt="Page 1 preview" />
-        </div>
-
-        <div class="previewCard">
-          <div class="previewTitle">Page 2</div>
-          <img id="page2Img" class="previewImg" alt="Page 2 preview" />
-        </div>
-      </div>
-
-      <!-- ✅ OPTIONAL story text IDs -->
-      <div class="storyText">
-        <div class="storyTitle" id="storyTitle"></div>
-        <div class="storyLines" id="storyBullets"></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer class="footer">
-  <div class="container footRow">
-    <div>© 2026 MyMagicStoryBooks</div>
-    <div class="footLinks">
-      <a href="#themes">Themes</a>
-      <a href="#preview">Create Preview</a>
+  <footer class="footer">
+    <div class="container footRow">
+      <div>© 2026 MyMagicStoryBooks</div>
+      <div class="footLinks">
+        <a href="#themes">Themes</a>
+        <a href="#examples">Examples</a>
+        <a href="#preview">Create Preview</a>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script src="script.js"></script>
+  <script defer src="/script.js?v=20"></script>
 </body>
 </html>
