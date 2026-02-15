@@ -1,348 +1,545 @@
-// MyMagicStoryBooks — demo preview (no broken images)
-// - Always shows placeholders
-// - When user uploads a photo, generates "book style" images using canvas
+// MyMagicStoryBooks - demo preview generator (no AI)
+// - Shows BEFORE = uploaded photo
+// - Generates AFTER + Cover + Page1 + Page2 (book-style) using Canvas
 
-document.addEventListener("DOMContentLoaded", () => {
-  const el = (id) => document.getElementById(id);
+const $ = (sel) => document.querySelector(sel);
 
-  const kidName   = el("kidName");
-  const kidAge    = el("kidAge");
-  const kidPhoto  = el("kidPhoto");
-  const createBtn = el("createBtn");
+const kidNameEl = $("#kidName");
+const kidAgeEl = $("#kidAge");
+const kidPhotoEl = $("#kidPhoto");
+const themeEl = $("#themeSelect");
+const createBtn = $("#createBtn");
 
-  const beforeImg = el("beforeImg");
-  const afterImg  = el("afterImg");
-  const coverImg  = el("coverImg");
-  const page1Img  = el("page1Img");
-  const page2Img  = el("page2Img");
+const selectedThemeLabel = $("#selectedThemeLabel");
 
-  const themeSelect = el("themeSelect");
-  const selectedThemeText = el("selectedThemeText");
+const beforeImg = $("#beforeImg");
+const afterImg = $("#afterImg");
+const coverImg = $("#coverImg");
+const page1Img = $("#page1Img");
+const page2Img = $("#page2Img");
 
-  const storyTitle = el("storyTitle");
-  const storyBullets = el("storyBullets");
+const storyTitleEl = $("#storyTitle");
+const storyBulletsEl = $("#storyBullets");
 
-  const THEMES = [
-    { key:"adventure", label:"Adventure / Aventura", title:"The Brave Little Explorer" },
-    { key:"bedtime",   label:"Bedtime / Dormir",     title:"Goodnight, Little Star"  },
-    { key:"animals",   label:"Animals / Animais",    title:"Friends of the Forest"   },
-    { key:"princess",  label:"Princess / Princesa",  title:"The Kind Royal Heart"    },
-    { key:"superhero", label:"Superhero / Herói",    title:"The Super Helper"        },
-    { key:"dinosaurs", label:"Dinosaurs / Dinossauros", title:"Dino Day!"            },
-    { key:"space",     label:"Space / Espaço",       title:"Rocket to Wonder"        },
-    { key:"soccer",    label:"Soccer / Futebol",     title:"Goal of Courage"         }
-  ];
+let uploadedObjectUrl = null;
+let uploadedImage = null; // HTMLImageElement
 
-  if (themeSelect) {
-    themeSelect.innerHTML = "";
-    THEMES.forEach((t) => {
-      const opt = document.createElement("option");
-      opt.value = t.key;
-      opt.textContent = t.label;
-      themeSelect.appendChild(opt);
-    });
-    themeSelect.value = "adventure";
-    updateSelectedThemeLine();
-    themeSelect.addEventListener("change", updateSelectedThemeLine);
+const THEMES = [
+  {
+    id: "adventure",
+    label: "Adventure / Aventura",
+    title: (name) => `The Brave Little Explorer`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) discovered a secret map and followed it into a friendly forest full of surprises.`,
+      `With courage and kindness, ${name} helped new friends and found a bright treasure: confidence.`
+    ])
+  },
+  {
+    id: "bedtime",
+    label: "Bedtime / Dormir",
+    title: (name) => `Goodnight, Little Star`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) looked outside and saw a sleepy star waving softly. “Come,” the star said, “let’s breathe slow and rest.”`,
+      `Clouds became pillows, the moon sang a lullaby, and ${name} drifted into the sweetest dream—safe, warm, and loved.`
+    ])
+  },
+  {
+    id: "emotions",
+    label: "Emotions / Emoções",
+    title: (name) => `The Rainbow of Feelings`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) met five friendly colors—each one teaching a feeling and how to talk about it.`,
+      `By the end, ${name} learned: all feelings are okay, and sharing them makes the heart lighter.`
+    ])
+  },
+  {
+    id: "friendship",
+    label: "Friendship / Amizade",
+    title: (name) => `Best Friends Forever`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) made a new friend at the playground and learned how to share, wait, and cheer.`,
+      `Together they built a “kindness castle” and promised to be brave helpers every day.`
+    ])
+  },
+  {
+    id: "animals",
+    label: "Animals / Animais",
+    title: (name) => `The Animal Parade`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) joined a parade of silly animals who needed help finding their homes.`,
+      `${name} listened carefully, followed clues, and became the hero of the whole safari.`
+    ])
+  },
+  {
+    id: "princess",
+    label: "Princess / Princesa",
+    title: (name) => `The Kind Little Princess`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) wore a sparkling crown—but the real magic was being kind to everyone.`,
+      `The kingdom celebrated: kindness is the best superpower of all.`
+    ])
+  },
+  {
+    id: "superhero",
+    label: "Superhero / Super-herói",
+    title: (name) => `Super ${name}`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) discovered a secret superpower: helping others with a big smile.`,
+      `Every mission ended the same way—high-fives, hugs, and a happy heart.`
+    ])
+  },
+  {
+    id: "space",
+    label: "Space / Espaço",
+    title: (name) => `Rocket to the Stars`,
+    bullets: (name, age) => ([
+      `${name} (age ${age}) blasted off in a cozy rocket to visit friendly planets and glittery moons.`,
+      `Among the stars, ${name} learned to dream big—and bring that courage back home.`
+    ])
+  }
+];
+
+function populateThemes() {
+  themeEl.innerHTML = "";
+  for (const t of THEMES) {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.label;
+    themeEl.appendChild(opt);
+  }
+  themeEl.value = "adventure";
+  selectedThemeLabel.textContent = `Selected theme: ${getTheme().label}`;
+}
+
+function getTheme() {
+  return THEMES.find(t => t.id === themeEl.value) || THEMES[0];
+}
+
+themeEl.addEventListener("change", () => {
+  selectedThemeLabel.textContent = `Selected theme: ${getTheme().label}`;
+});
+
+kidPhotoEl.addEventListener("change", async () => {
+  const file = kidPhotoEl.files && kidPhotoEl.files[0];
+  if (!file) return;
+
+  // clean old URL
+  if (uploadedObjectUrl) {
+    URL.revokeObjectURL(uploadedObjectUrl);
+    uploadedObjectUrl = null;
   }
 
-  function getTheme(){
-    const key = themeSelect ? themeSelect.value : "adventure";
-    return THEMES.find(t => t.key === key) || THEMES[0];
+  uploadedObjectUrl = URL.createObjectURL(file);
+  beforeImg.src = uploadedObjectUrl;
+  beforeImg.classList.add("hasImage");
+
+  uploadedImage = await loadImage(uploadedObjectUrl);
+
+  // auto-generate preview instantly (no need to click)
+  generateAll();
+});
+
+createBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  generateAll();
+});
+
+function sanitizeName(raw) {
+  const name = (raw || "").trim();
+  if (!name) return "your child";
+  // Keep it simple: letters, numbers, spaces, apostrophes, hyphens
+  return name.replace(/[^\p{L}\p{N}\s'\-]/gu, "").slice(0, 30) || "your child";
+}
+
+function sanitizeAge(raw) {
+  const n = Number(String(raw || "").trim());
+  if (!Number.isFinite(n)) return 6;
+  const clamped = Math.max(1, Math.min(12, Math.round(n)));
+  return clamped;
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const im = new Image();
+    im.onload = () => resolve(im);
+    im.onerror = reject;
+    im.src = src;
+  });
+}
+
+function generateAll() {
+  const name = sanitizeName(kidNameEl.value);
+  const age = sanitizeAge(kidAgeEl.value);
+  const theme = getTheme();
+
+  selectedThemeLabel.textContent = `Selected theme: ${theme.label}`;
+
+  // story text
+  const title = theme.title(name);
+  const bullets = theme.bullets(name, age);
+
+  storyTitleEl.textContent = title;
+  storyBulletsEl.innerHTML = bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("");
+
+  // need an uploaded image to create visuals
+  if (!uploadedImage) {
+    // show friendly placeholders if no image
+    setImg(afterImg, makePlaceholderCard("After (book style)", "Upload a photo above"));
+    setImg(coverImg, makePlaceholderCard("Cover", "Generated cover"));
+    setImg(page1Img, makePlaceholderCard("Page 1", "Generated page"));
+    setImg(page2Img, makePlaceholderCard("Page 2", "Generated page"));
+    return;
   }
 
-  function updateSelectedThemeLine(){
-    const t = getTheme();
-    if (selectedThemeText) selectedThemeText.textContent = `Selected theme: ${t.label}`;
-  }
+  // Generate after/cover/pages using the uploaded photo
+  const palette = pickPalette(theme.id);
 
-  // placeholders (avoid broken icons)
-  safeSetImg(beforeImg, makePlaceholder("Before (your upload)", "Upload a photo above"));
-  safeSetImg(afterImg,  makePlaceholder("After (book style)", "Preview will appear here"));
-  safeSetImg(coverImg,  makePlaceholder("Cover", "Generated cover"));
-  safeSetImg(page1Img,  makePlaceholder("Page 1", "Generated page"));
-  safeSetImg(page2Img,  makePlaceholder("Page 2", "Generated page"));
-
-  if (!createBtn) return;
-
-  createBtn.addEventListener("click", async () => {
-    const name = (kidName?.value || "").trim();
-    const age  = (kidAge?.value  || "").trim();
-    const file = kidPhoto?.files?.[0];
-
-    if (!name || !age || !file) {
-      alert("Please fill Child's Name, Age, and upload a photo.");
-      return;
-    }
-
-    const theme = getTheme();
-
-    const dataURL = await readFileAsDataURL(file);
-    safeSetImg(beforeImg, dataURL);
-
-    const photo = await loadImage(dataURL);
-
-    safeSetImg(afterImg, renderBookCard(photo, name, age, theme, "AFTER"));
-    safeSetImg(coverImg, renderBookCard(photo, name, age, theme, "COVER"));
-    safeSetImg(page1Img, renderPage(photo, name, age, theme, 1));
-    safeSetImg(page2Img, renderPage(photo, name, age, theme, 2));
-
-    if (storyTitle) storyTitle.textContent = `${theme.title} — ${name} (age ${age})`;
-    if (storyBullets) {
-      storyBullets.innerHTML = `
-        • ${name} discovered a magical surprise and chose courage.<br>
-        • A friendly helper showed ${name} a new way to try again.<br>
-        • By the end, ${name} smiled proudly — the hero of the story ✨
-      `;
-    }
+  const afterData = makeBookCover({
+    w: 1100, h: 700,
+    title,
+    name,
+    age,
+    themeLabel: theme.label,
+    photo: uploadedImage,
+    palette,
+    badge: "FREE PREVIEW"
   });
 
-  function safeSetImg(node, src){
-    if (!node) return;
-    node.src = src;
-    node.style.display = "block";
-  }
+  const coverData = makeBookCover({
+    w: 1000, h: 640,
+    title,
+    name,
+    age,
+    themeLabel: theme.label,
+    photo: uploadedImage,
+    palette,
+    badge: "COVER"
+  });
 
-  function readFileAsDataURL(file){
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-  }
+  const page1Data = makeBookPage({
+    w: 1000, h: 640,
+    title: `${title} — Page 1`,
+    name,
+    age,
+    themeLabel: theme.label,
+    photo: uploadedImage,
+    palette,
+    paragraph: bullets[0]
+  });
 
-  function loadImage(src){
-    return new Promise((resolve, reject) => {
-      const i = new Image();
-      i.onload = () => resolve(i);
-      i.onerror = reject;
-      i.src = src;
-    });
-  }
+  const page2Data = makeBookPage({
+    w: 1000, h: 640,
+    title: `${title} — Page 2`,
+    name,
+    age,
+    themeLabel: theme.label,
+    photo: uploadedImage,
+    palette,
+    paragraph: bullets[1]
+  });
 
-  function makePlaceholder(title, subtitle){
-    const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#dff6ff"/>
-      <stop offset="0.5" stop-color="#fff2c9"/>
-      <stop offset="1" stop-color="#f3e5ff"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="800" rx="40" fill="url(#g)"/>
-  <rect x="60" y="60" width="1080" height="680" rx="32" fill="rgba(255,255,255,0.65)" stroke="rgba(31,36,64,0.12)"/>
-  <text x="110" y="180" font-family="Arial" font-size="54" font-weight="800" fill="#1f2440">${escapeXML(title)}</text>
-  <text x="110" y="250" font-family="Arial" font-size="30" font-weight="700" fill="rgba(31,36,64,0.7)">${escapeXML(subtitle)}</text>
-  <circle cx="240" cy="450" r="90" fill="rgba(124,92,255,0.18)"/>
-  <circle cx="520" cy="450" r="90" fill="rgba(46,233,166,0.16)"/>
-  <circle cx="800" cy="450" r="90" fill="rgba(255,90,165,0.16)"/>
-  <circle cx="1000" cy="450" r="90" fill="rgba(255,207,74,0.20)"/>
-</svg>`;
-    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-  }
+  setImg(afterImg, afterData);
+  setImg(coverImg, coverData);
+  setImg(page1Img, page1Data);
+  setImg(page2Img, page2Data);
+}
 
-  function escapeXML(s){
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
+function setImg(imgEl, dataUrl) {
+  imgEl.src = dataUrl;
+  imgEl.classList.add("hasImage");
+}
 
-  function renderBookCard(photo, name, age, theme){
-    const c = document.createElement("canvas");
-    c.width = 1200; c.height = 800;
-    const ctx = c.getContext("2d");
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-    const g = ctx.createLinearGradient(0,0,1200,800);
-    g.addColorStop(0, "#7c5cff");
-    g.addColorStop(0.5, "#2ee9a6");
-    g.addColorStop(1, "#ffcf4a");
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,1200,800);
+function pickPalette(themeId) {
+  // Pastel kids palettes
+  const map = {
+    adventure: ["#7C5CFF", "#29D3C2", "#FFD46A", "#FF7AA2"],
+    bedtime: ["#6B5CFF", "#79D7FF", "#B8FFCC", "#FFE199"],
+    emotions: ["#FF6FAE", "#7AE7FF", "#B7FF6A", "#FFD46A"],
+    friendship: ["#7C5CFF", "#FFB86B", "#62E6A8", "#FF7AA2"],
+    animals: ["#57D6FF", "#7CFF9A", "#FFD46A", "#FF7AA2"],
+    princess: ["#FF6FAE", "#CFA7FF", "#7AE7FF", "#FFD46A"],
+    superhero: ["#7C5CFF", "#FF4D6D", "#57D6FF", "#FFD46A"],
+    space: ["#6B5CFF", "#57D6FF", "#62E6A8", "#FFD46A"]
+  };
+  return map[themeId] || ["#7C5CFF", "#29D3C2", "#FFD46A", "#FF7AA2"];
+}
 
-    roundRect(ctx, 70, 70, 1060, 660, 36);
-    ctx.fillStyle = "rgba(255,255,255,0.82)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(31,36,64,0.12)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+function makePlaceholderCard(title, subtitle) {
+  const w = 1000, h = 640;
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
 
-    ctx.fillStyle = "#1f2440";
-    ctx.font = "bold 54px Arial";
-    ctx.fillText(theme.title, 120, 170);
+  // background
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, "rgba(124,92,255,.18)");
+  g.addColorStop(.5, "rgba(87,214,255,.16)");
+  g.addColorStop(1, "rgba(255,212,106,.16)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
 
-    ctx.font = "bold 28px Arial";
-    ctx.fillStyle = "rgba(31,36,64,0.75)";
-    ctx.fillText(`Starring: ${name} • Age ${age}`, 120, 220);
+  roundRect(ctx, 40, 40, w - 80, h - 80, 36);
+  ctx.fillStyle = "rgba(255,255,255,.85)";
+  ctx.fill();
 
-    // photo circle
-    const cx=250, cy=430, r=120;
-    ctx.save();
+  ctx.fillStyle = "rgba(31,36,64,.92)";
+  ctx.font = "900 52px 'Baloo 2', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText(title, 90, 170);
+
+  ctx.fillStyle = "rgba(31,36,64,.65)";
+  ctx.font = "800 26px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText(subtitle, 90, 220);
+
+  // cute circles
+  const colors = ["#7C5CFF", "#62E6A8", "#FF7AA2", "#FFD46A"];
+  for (let i = 0; i < 4; i++) {
+    ctx.globalAlpha = 0.65;
+    ctx.fillStyle = colors[i];
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.closePath();
-    ctx.clip();
-    drawCoverCrop(ctx, photo, cx-r, cy-r, r*2, r*2);
-    ctx.restore();
+    ctx.arc(210 + i * 160, 430, 58, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
 
+  return c.toDataURL("image/png");
+}
+
+function makeBookCover({ w, h, title, name, age, themeLabel, photo, palette, badge }) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+
+  // bg gradient
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, hexToRgba(palette[0], 0.22));
+  g.addColorStop(0.45, hexToRgba(palette[1], 0.18));
+  g.addColorStop(1, hexToRgba(palette[2], 0.18));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  // card
+  roundRect(ctx, 44, 44, w - 88, h - 88, 42);
+  ctx.fillStyle = "rgba(255,255,255,.88)";
+  ctx.fill();
+
+  // border
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(31,36,64,.10)";
+  ctx.stroke();
+
+  // left photo circle
+  const cx = 190, cy = 190, r = 92;
+
+  // outer ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 10, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,.95)";
+  ctx.fill();
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = hexToRgba(palette[0], 0.55);
+  ctx.stroke();
+
+  // clip circle + draw photo
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.clip();
+  drawCoverCropped(ctx, photo, cx - r, cy - r, r * 2, r * 2);
+  ctx.restore();
+
+  // Title & details
+  ctx.fillStyle = "rgba(31,36,64,.95)";
+  ctx.font = "900 54px 'Baloo 2', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  wrapText(ctx, title, 320, 150, w - 420, 62);
+
+  ctx.fillStyle = "rgba(31,36,64,.75)";
+  ctx.font = "800 26px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText(`Starring: ${name} • Age ${age}`, 320, 240);
+
+  // badge
+  pill(ctx, 320, 275, badge, palette[0]);
+
+  // theme pill
+  pill(ctx, 320, 320, `Theme: ${themeLabel}`, palette[1], true);
+
+  // bullets
+  ctx.fillStyle = "rgba(31,36,64,.78)";
+  ctx.font = "800 22px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  const bulletLines = [
+    "• Personalized story",
+    "• Kid-friendly preview",
+    "• Your child as the hero",
+    "• Cover + pages preview"
+  ];
+  let y = 380;
+  for (const line of bulletLines) {
+    ctx.fillText(line, 330, y);
+    y += 34;
+  }
+
+  // footer ribbon
+  roundRect(ctx, 290, h - 150, w - 380, 62, 18);
+  ctx.fillStyle = "rgba(124,92,255,.10)";
+  ctx.fill();
+  ctx.fillStyle = "rgba(31,36,64,.78)";
+  ctx.font = "900 22px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText("Made with love for kids 💛", 330, h - 110);
+
+  // confetti dots
+  confetti(ctx, w, h, palette);
+
+  return c.toDataURL("image/png");
+}
+
+function makeBookPage({ w, h, title, name, age, themeLabel, photo, palette, paragraph }) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, hexToRgba(palette[3], 0.18));
+  g.addColorStop(0.6, hexToRgba(palette[1], 0.14));
+  g.addColorStop(1, "rgba(255,255,255,.0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  roundRect(ctx, 44, 44, w - 88, h - 88, 42);
+  ctx.fillStyle = "rgba(255,255,255,.90)";
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(31,36,64,.10)";
+  ctx.stroke();
+
+  // top header
+  ctx.fillStyle = "rgba(31,36,64,.92)";
+  ctx.font = "900 34px 'Baloo 2', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText(title, 90, 120);
+
+  ctx.fillStyle = "rgba(31,36,64,.65)";
+  ctx.font = "800 22px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText(`Featuring: ${name} • age ${age}`, 90, 155);
+
+  // photo box (left)
+  roundRect(ctx, 90, 195, 300, 300, 28);
+  ctx.fillStyle = "rgba(124,92,255,.08)";
+  ctx.fill();
+  ctx.save();
+  roundRect(ctx, 110, 215, 260, 260, 22);
+  ctx.clip();
+  drawCoverCropped(ctx, photo, 110, 215, 260, 260);
+  ctx.restore();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(31,36,64,.10)";
+  roundRect(ctx, 110, 215, 260, 260, 22);
+  ctx.stroke();
+
+  // story text (right)
+  ctx.fillStyle = "rgba(31,36,64,.88)";
+  ctx.font = "900 22px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  ctx.fillText("Story", 430, 230);
+
+  ctx.fillStyle = "rgba(31,36,64,.78)";
+  ctx.font = "800 20px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  wrapText(ctx, paragraph, 430, 265, w - 520, 30);
+
+  // bottom pills
+  pill(ctx, 90, h - 140, themeLabel, palette[0], true);
+  pill(ctx, 320, h - 140, `Made for ${name}`, palette[1], true);
+  pill(ctx, 560, h - 140, `Preview pages (demo)`, palette[2], true);
+
+  confetti(ctx, w, h, palette);
+
+  return c.toDataURL("image/png");
+}
+
+function drawCoverCropped(ctx, img, x, y, w, h) {
+  // cover-crop to fill w/h
+  const ir = img.width / img.height;
+  const tr = w / h;
+  let sx, sy, sw, sh;
+
+  if (ir > tr) {
+    sh = img.height;
+    sw = sh * tr;
+    sx = (img.width - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.width;
+    sh = sw / tr;
+    sx = 0;
+    sy = (img.height - sh) / 2;
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
+
+function pill(ctx, x, y, text, color, soft = false) {
+  ctx.save();
+  ctx.font = "900 18px 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  const padX = 14;
+  const padY = 10;
+  const w = ctx.measureText(text).width + padX * 2;
+  const h = 40;
+
+  roundRect(ctx, x, y, w, h, 999);
+  ctx.fillStyle = soft ? hexToRgba(color, 0.14) : hexToRgba(color, 0.18);
+  ctx.fill();
+
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = hexToRgba(color, 0.25);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(31,36,64,.85)";
+  ctx.fillText(text, x + padX, y + 26);
+  ctx.restore();
+}
+
+function confetti(ctx, w, h, palette) {
+  ctx.save();
+  for (let i = 0; i < 26; i++) {
+    const x = 80 + Math.random() * (w - 160);
+    const y = 80 + Math.random() * (h - 160);
+    const r = 4 + Math.random() * 7;
+    const c = palette[i % palette.length];
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = c;
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.strokeStyle = "rgba(255,255,255,0.9)";
-    ctx.lineWidth = 10;
-    ctx.stroke();
-
-    pill(ctx, 120, 270, `Theme: ${theme.label}`);
-
-    ctx.fillStyle = "rgba(31,36,64,0.78)";
-    ctx.font = "bold 22px Arial";
-    const bullets = [
-      "• Personalized story",
-      "• Kid-friendly preview",
-      "• Your child as the hero",
-      "• Cover + pages preview"
-    ];
-    bullets.forEach((b, i) => ctx.fillText(b, 120, 330 + i*34));
-
-    roundRect(ctx, 120, 620, 520, 60, 999);
-    ctx.fillStyle = "rgba(124,92,255,0.14)";
+    ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#1f2440";
-    ctx.font = "bold 22px Arial";
-    ctx.fillText("Made with love for kids 💛", 150, 660);
-
-    return c.toDataURL("image/png");
   }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
 
-  function renderPage(photo, name, age, theme, pageNo){
-    const c = document.createElement("canvas");
-    c.width = 1200; c.height = 800;
-    const ctx = c.getContext("2d");
+function hexToRgba(hex, a) {
+  const h = hex.replace("#", "").trim();
+  const full = h.length === 3 ? h.split("").map(ch => ch + ch).join("") : h;
+  const n = parseInt(full, 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return `rgba(${r},${g},${b},${a})`;
+}
 
-    const g = ctx.createLinearGradient(0,0,1200,800);
-    g.addColorStop(0, "#ffffff");
-    g.addColorStop(1, "#f3f4ff");
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,1200,800);
-
-    roundRect(ctx, 70, 70, 1060, 660, 36);
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(31,36,64,0.12)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = "#1f2440";
-    ctx.font = "bold 34px Arial";
-    ctx.fillText(`${theme.title} — Page ${pageNo}`, 120, 150);
-
-    ctx.font = "bold 22px Arial";
-    ctx.fillStyle = "rgba(31,36,64,0.7)";
-    ctx.fillText(`Featuring: ${name} (age ${age})`, 120, 190);
-
-    roundRect(ctx, 120, 240, 420, 420, 28);
-    ctx.fillStyle = "rgba(124,92,255,0.12)";
-    ctx.fill();
-    ctx.save();
-    ctx.beginPath();
-    roundedPath(ctx, 120, 240, 420, 420, 28);
-    ctx.clip();
-    drawCoverCrop(ctx, photo, 120, 240, 420, 420);
-    ctx.restore();
-
-    roundRect(ctx, 580, 240, 490, 420, 28);
-    ctx.fillStyle = "rgba(46,233,166,0.10)";
-    ctx.fill();
-
-    ctx.fillStyle = "#1f2440";
-    ctx.font = "bold 26px Arial";
-    ctx.fillText("Story", 620, 300);
-
-    ctx.font = "bold 22px Arial";
-    ctx.fillStyle = "rgba(31,36,64,0.78)";
-    const lines = pageNo === 1
-      ? `${name} found a tiny spark of magic in the air. “Come with me,” whispered the wind. ${name} took a deep breath and stepped forward.`
-      : `Soon, the magic became a bright, warm light. ${name} learned: brave hearts try again. And the story ended with laughter and hugs.`;
-    wrapText(ctx, lines, 620, 350, 420, 34);
-
-    pill(ctx, 120, 690, theme.label);
-    pill(ctx, 420, 690, `Made for ${name}`);
-    pill(ctx, 720, 690, `Preview pages (demo)`);
-
-    return c.toDataURL("image/png");
-  }
-
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight){
-    const words = text.split(" ");
-    let line = "";
-    let yy = y;
-    for (let n=0; n<words.length; n++){
-      const testLine = line + words[n] + " ";
-      if (ctx.measureText(testLine).width > maxWidth && n>0){
-        ctx.fillText(line, x, yy);
-        line = words[n] + " ";
-        yy += lineHeight;
-      } else {
-        line = testLine;
-      }
-    }
-    ctx.fillText(line, x, yy);
-  }
-
-  function pill(ctx, x, y, text){
-    ctx.font = "bold 18px Arial";
-    const padX = 16;
-    const w = ctx.measureText(text).width + padX*2;
-    const h = 40;
-
-    roundRect(ctx, x, y, w, h, 999);
-    ctx.fillStyle = "rgba(255,255,255,0.85)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(31,36,64,0.12)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(31,36,64,0.8)";
-    ctx.fillText(text, x + padX, y + 26);
-  }
-
-  function roundRect(ctx, x, y, w, h, r){
-    const rr = Math.min(r, w/2, h/2);
-    ctx.beginPath();
-    ctx.moveTo(x+rr, y);
-    ctx.arcTo(x+w, y, x+w, y+h, rr);
-    ctx.arcTo(x+w, y+h, x, y+h, rr);
-    ctx.arcTo(x, y+h, x, y, rr);
-    ctx.arcTo(x, y, x+w, y, rr);
-    ctx.closePath();
-  }
-
-  function roundedPath(ctx, x, y, w, h, r){
-    const rr = Math.min(r, w/2, h/2);
-    ctx.moveTo(x+rr, y);
-    ctx.arcTo(x+w, y, x+w, y+h, rr);
-    ctx.arcTo(x+w, y+h, x, y+h, rr);
-    ctx.arcTo(x, y+h, x, y, rr);
-    ctx.arcTo(x, y, x+w, y, rr);
-    ctx.closePath();
-  }
-
-  function drawCoverCrop(ctx, img, x, y, w, h){
-    const iw = img.naturalWidth || img.width;
-    const ih = img.naturalHeight || img.height;
-    const ir = iw / ih;
-    const r = w / h;
-
-    let sx=0, sy=0, sw=iw, sh=ih;
-    if (ir > r){
-      sh = ih;
-      sw = ih * r;
-      sx = (iw - sw) / 2;
-      sy = 0;
-    } else {
-      sw = iw;
-      sh = iw / r;
-      sx = 0;
-      sy = (ih - sh) / 2;
-    }
-    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
-  }
-});
+// init
+populateThemes();
+generateAll();
