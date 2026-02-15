@@ -67,10 +67,25 @@ border-radius: 12px;
 }
 
 .card .img {
-height: 140px;
-background: #333;
+height: 160px;
 border-radius: 8px;
 margin-bottom: 10px;
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+
+/* Imagens dos livros */
+.card:nth-child(1) .img {
+background-image: url("https://images.unsplash.com/photo-1519681393784-d120267933ba");
+}
+
+.card:nth-child(2) .img {
+background-image: url("https://images.unsplash.com/photo-1503457574465-75b7a6e3e20a");
+}
+
+.card:nth-child(3) .img {
+background-image: url("https://images.unsplash.com/photo-1526312426976-f4d754fa9bd6");
 }
 
 .preview {
