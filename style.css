@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap');
-
+/* =========================
+   RESET BÁSICO
+========================= */
 *{
   box-sizing:border-box;
 }
@@ -10,42 +11,33 @@ html, body{
 }
 
 body{
-  font-family:"Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background: linear-gradient(180deg,#eef4ff,#fff7d6);
-  color:#1f2440;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f7ff;
+  color:#222;
 }
 
-/* ---------- GLOBAL ---------- */
+/* =========================
+   CONTAINER
+========================= */
 .container{
-  width: min(1100px, 92vw);
+  max-width:1100px;
   margin:auto;
+  padding:16px;
 }
 
-h1,h2,h3{
-  font-family:"Baloo 2", cursive;
-  margin:0 0 8px;
-}
-
-p{
-  margin:0 0 12px;
-  color:#555;
-  font-weight:700;
-}
-
-/* ---------- HEADER ---------- */
+/* =========================
+   HEADER
+========================= */
 .header{
-  background:rgba(255,255,255,.85);
+  background:#ffffff;
   border-bottom:1px solid #ddd;
-  position:sticky;
-  top:0;
-  z-index:10;
+  padding:14px 0;
 }
 
 .headerRow{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 0;
   gap:12px;
 }
 
@@ -56,15 +48,14 @@ p{
 }
 
 .logo{
-  font-family:"Baloo 2", cursive;
   font-size:20px;
   font-weight:900;
 }
 
 .tagline{
   font-size:12px;
-  font-weight:700;
   color:#666;
+  font-weight:600;
 }
 
 .headerBtns{
@@ -72,31 +63,35 @@ p{
   gap:10px;
 }
 
-/* ---------- BUTTONS ---------- */
+/* =========================
+   BOTÕES
+========================= */
 .btn{
-  border:0;
-  border-radius:999px;
   padding:10px 16px;
+  border-radius:999px;
+  border:none;
   cursor:pointer;
-  font-weight:900;
-  background:linear-gradient(135deg,#7c5cff,#a98bff);
+  font-weight:800;
+  background:#6b7cff;
   color:#fff;
 }
 
 .btn.big{
   padding:12px 20px;
-  font-size:16px;
+  font-size:15px;
 }
 
 .btn.ghost{
   background:#fff;
   color:#333;
-  border:1px solid #ddd;
+  border:1px solid #ccc;
 }
 
-/* ---------- HERO ---------- */
+/* =========================
+   HERO
+========================= */
 .hero{
-  padding:40px 0 20px;
+  padding:30px 0;
 }
 
 .heroGrid{
@@ -106,26 +101,47 @@ p{
   align-items:center;
 }
 
+.hero h1{
+  font-size:32px;
+  margin-bottom:10px;
+}
+
 .hero p{
+  color:#555;
+  font-weight:600;
   max-width:600px;
 }
 
-/* ---------- SECTIONS ---------- */
+/* =========================
+   SEÇÕES
+========================= */
 .themes,
 .examples,
 .preview{
-  padding:24px 0;
+  padding:20px 0;
 }
 
 .sectionHead{
   margin-bottom:12px;
 }
 
-/* ---------- FORM CARD ---------- */
+.sectionHead h2{
+  font-size:24px;
+  margin-bottom:6px;
+}
+
+.sectionHead p{
+  color:#555;
+  font-weight:600;
+}
+
+/* =========================
+   FORM CARD
+========================= */
 .formCard{
   background:#fff;
-  border-radius:20px;
-  border:1px solid #e2e2e2;
+  border-radius:14px;
+  border:1px solid #ddd;
   padding:16px;
 }
 
@@ -138,24 +154,20 @@ p{
 
 .previewForm input{
   padding:12px 14px;
-  border-radius:999px;
+  border-radius:8px;
   border:1px solid #ccc;
   min-width:200px;
-  font-weight:700;
+  font-weight:600;
 }
 
 .filePick{
   position:relative;
-  overflow:hidden;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
   padding:12px 16px;
-  border-radius:999px;
+  border-radius:8px;
   border:1px dashed #999;
   background:#fafafa;
   cursor:pointer;
-  font-weight:900;
+  font-weight:700;
 }
 
 .filePick input{
@@ -165,11 +177,20 @@ p{
   cursor:pointer;
 }
 
-/* ---------- RESULT ---------- */
+.selectedThemeLine{
+  margin-top:10px;
+  text-align:center;
+  font-weight:700;
+  color:#555;
+}
+
+/* =========================
+   RESULTADO
+========================= */
 .result{
-  margin-top:16px;
+  margin-top:20px;
   background:#fff;
-  border-radius:22px;
+  border-radius:14px;
   border:1px solid #ddd;
   padding:16px;
 }
@@ -178,17 +199,19 @@ p{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
 }
 
 .miniNote{
   font-size:12px;
-  font-weight:700;
   color:#666;
+  font-weight:600;
 }
 
-/* ---------- BEFORE / AFTER ---------- */
+/* =========================
+   BEFORE / AFTER
+========================= */
 .baRow{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -198,26 +221,27 @@ p{
 
 .baBox{
   background:#fafafa;
-  border-radius:18px;
+  border-radius:12px;
   padding:12px;
-  border:1px solid #e1e1e1;
+  border:1px solid #ddd;
 }
 
 .baTitle{
-  font-family:"Baloo 2", cursive;
-  font-weight:900;
-  margin-bottom:8px;
+  font-weight:800;
+  margin-bottom:6px;
 }
 
 .baImg2{
   width:100%;
   height:260px;
   object-fit:cover;
-  border-radius:14px;
-  border:1px solid #ddd;
+  border-radius:10px;
+  border:1px solid #ccc;
 }
 
-/* ---------- BOOK PREVIEW ---------- */
+/* =========================
+   BOOK PREVIEW
+========================= */
 .previewGrid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -227,46 +251,48 @@ p{
 
 .previewCard{
   background:#fafafa;
-  border-radius:18px;
+  border-radius:12px;
   padding:12px;
-  border:1px solid #e1e1e1;
+  border:1px solid #ddd;
 }
 
 .previewTitle{
-  font-family:"Baloo 2", cursive;
-  font-weight:900;
-  margin-bottom:8px;
+  font-weight:800;
+  margin-bottom:6px;
 }
 
 .previewImg{
   width:100%;
   height:220px;
   object-fit:cover;
-  border-radius:14px;
-  border:1px solid #ddd;
+  border-radius:10px;
+  border:1px solid #ccc;
 }
 
-/* ---------- STORY ---------- */
+/* =========================
+   STORY
+========================= */
 .storyText{
   margin-top:16px;
   background:#fafafa;
-  border-radius:18px;
+  border-radius:12px;
   padding:14px;
-  border:1px solid #e1e1e1;
+  border:1px solid #ddd;
 }
 
 .storyTitle{
-  font-family:"Baloo 2", cursive;
-  font-weight:900;
+  font-weight:800;
   margin-bottom:6px;
 }
 
 .storyLines{
-  font-weight:700;
+  font-weight:600;
   color:#555;
 }
 
-/* ---------- FOOTER ---------- */
+/* =========================
+   FOOTER
+========================= */
 .footer{
   margin-top:30px;
   padding:20px 0;
@@ -278,23 +304,28 @@ p{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
-  font-weight:700;
+  font-weight:600;
   color:#666;
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* =========================
+   RESPONSIVO
+========================= */
 @media(max-width:900px){
   .heroGrid{
     grid-template-columns:1fr;
   }
-  .previewGrid{
-    grid-template-columns:1fr;
-  }
+
   .baRow{
     grid-template-columns:1fr;
   }
+
+  .previewGrid{
+    grid-template-columns:1fr;
+  }
+
   .baImg2{
     height:220px;
   }
