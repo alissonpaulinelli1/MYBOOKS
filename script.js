@@ -1,4 +1,27 @@
-document.getElementById("previewForm").addEventListener("submit", function (e) {
-e.preventDefault();
-document.getElementById("result").classList.remove("hidden");
+const form = document.getElementById("previewForm");
+const result = document.getElementById("result");
+const beforeImg = document.getElementById("beforeImg");
+const afterImg = document.getElementById("afterImg");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const fileInput = document.getElementById("kidPhoto");
+  const file = fileInput.files && fileInput.files[0];
+
+  if (!file) return;
+
+  // BEFORE: show uploaded photo
+  const url = URL.createObjectURL(file);
+  beforeImg.src = url;
+
+  // AFTER + PAGES: demo images (until AI is connected)
+  afterImg.src = "https://picsum.photos/seed/after-kid/700/700";
+  page1.src = "https://picsum.photos/seed/page-1/900/600";
+  page2.src = "https://picsum.photos/seed/page-2/900/600";
+
+  result.classList.remove("hidden");
+  result.scrollIntoView({ behavior: "smooth", block: "start" });
 });
