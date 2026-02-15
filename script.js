@@ -4,38 +4,60 @@ const beforeImg = document.getElementById("beforeImg");
 const afterImg = document.getElementById("afterImg");
 const generateBtn = document.getElementById("generateBtn");
 
+// ================= SAFETY CHECK =================
+function must(el, name){
+  if(!el){
+    alert(`Missing element: ${name}. Check your HTML ids.`);
+    throw new Error(`Missing element: ${name}`);
+  }
+  return el;
+}
+must(kidPhotoInput, "#kidPhoto");
+must(beforeImg, "#beforeImg");
+must(afterImg, "#afterImg");
+must(generateBtn, "#generateBtn");
+
+// IMPORTANT: if button is inside a <form>, prevent page reload
+generateBtn.type = "button";
+
 // ================= STATE =================
 let uploadedImageURL = "";
 
 // ================= UPLOAD HANDLER =================
 kidPhotoInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
+  const file = e.target.files && e.target.files[0];
   if (!file) return;
 
-  const url = URL.createObjectURL(file);
-  uploadedImageURL = url;
+  // clear old url
+  try { if (uploadedImageURL) URL.revokeObjectURL(uploadedImageURL); } catch(e){}
 
-  // BEFORE IMAGE
-  beforeImg.src = url;
+  uploadedImageURL = URL.createObjectURL(file);
+
+  // BEFORE
+  beforeImg.src = uploadedImageURL;
   beforeImg.style.display = "block";
 
-  // Reset AFTER until generate
+  // reset AFTER until generate
   afterImg.src = "";
+  afterImg.style.display = "none";
 });
 
 // ================= GENERATE PREVIEW =================
-generateBtn.addEventListener("click", () => {
+generateBtn.addEventListener("click", (e) => {
+  e.preventDefault(); // stops form submit
+  e.stopPropagation();
+
   if (!uploadedImageURL) {
     alert("Please upload a photo first.");
     return;
   }
 
-  // Simulate book-style image (for now)
+  // AFTER (demo): show same photo with a “book” look
   afterImg.src = uploadedImageURL;
   afterImg.style.display = "block";
 
-  // Add soft book effect
+  // book-ish styling
   afterImg.style.borderRadius = "18px";
-  afterImg.style.boxShadow =
-    "0 20px 40px rgba(0,0,0,0.15)";
+  afterImg.style.boxShadow = "0 18px 40px rgba(0,0,0,.18)";
+  afterImg.style.border = "1px solid rgba(0,0,0,.08)";
 });
