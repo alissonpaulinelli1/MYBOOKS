@@ -52,11 +52,48 @@
   <div class="container">
     <h3>Create Your Free Preview</h3>
 
-    <form id="previewForm">
-      <input type="text" placeholder="Child's Name" required />
-      <input type="number" placeholder="Age" required />
-      <button type="submit" class="btn btn-big">Generate Preview</button>
-    </form>
+    <form id="previewForm" class="previewForm">
+  <input id="kidName" type="text" placeholder="Child's Name" required />
+  <input id="kidAge" type="number" placeholder="Age" min="1" max="12" required />
+
+  <label class="filePick">
+    <input id="kidPhoto" type="file" accept="image/*" required />
+    <span>Upload Photo</span>
+  </label>
+
+  <button type="submit" class="btn btn-big">Create Preview</button>
+</form>
+
+<div id="result" class="result hidden">
+  <h4>Your Preview</h4>
+
+  <div class="ba">
+    <div class="baCol">
+      <div class="baLabel">Before</div>
+      <img id="beforeImg" class="baImg" alt="Before" />
+    </div>
+
+    <div class="baCol">
+      <div class="baLabel">After (demo)</div>
+      <img id="afterImg" class="baImg" alt="After" />
+    </div>
+  </div>
+
+  <div class="pages">
+    <div class="page">
+      <div class="pageTitle">Page 1 (demo)</div>
+      <img id="page1" class="pageImg" alt="Page 1" />
+    </div>
+    <div class="page">
+      <div class="pageTitle">Page 2 (demo)</div>
+      <img id="page2" class="pageImg" alt="Page 2" />
+    </div>
+  </div>
+
+  <p class="smallNote">
+    Demo preview: next step is connecting real AI generation (face + outfit + pages).
+  </p>
+</div>
 
     <div id="result" class="result hidden">
       <h4>Preview Ready!</h4>
