@@ -1,4 +1,7 @@
-// ===== Themes + Stories (8) =====
+// =======================
+// MyMagicStoryBooks - script.js
+// =======================
+
 const THEMES = [
   {
     id: "adventure",
@@ -82,10 +85,8 @@ const THEMES = [
   }
 ];
 
-// Default selected theme
 let selectedThemeId = "adventure";
 
-// ===== Helpers =====
 function svgToDataUri(svg) {
   const encoded = encodeURIComponent(svg)
     .replace(/'/g, "%27")
@@ -107,7 +108,9 @@ function escapeHtml(s) {
   }[m]));
 }
 
-// ===== SVG Book Templates (Cover + 2 pages) =====
+// -----------------------
+// Book artwork (SVG)
+// -----------------------
 function makeCoverSVG(theme, kidName, kidAge, photoUrl) {
   const [c1, c2, c3] = theme.palette;
   const title = escapeHtml(theme.storyTitle);
@@ -134,20 +137,17 @@ function makeCoverSVG(theme, kidName, kidAge, photoUrl) {
   <circle cx="1020" cy="650" r="140" fill="white" opacity="0.14"/>
   <circle cx="140" cy="680" r="120" fill="white" opacity="0.12"/>
 
-  <!-- Book frame -->
   <rect x="60" y="60" width="1080" height="680" rx="42" fill="rgba(255,255,255,0.80)" filter="url(#shadow)"/>
   <rect x="60" y="60" width="1080" height="680" rx="42" fill="none" stroke="rgba(31,36,64,0.12)" stroke-width="3"/>
 
-  <!-- Title -->
   <text x="520" y="190" font-size="54" font-family="Baloo 2, Arial" font-weight="900" fill="#1f2440">${title}</text>
   <text x="520" y="235" font-size="28" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.75)">Starring: ${n} • Age ${kidAge}</text>
 
-  <!-- Photo sticker -->
   <circle cx="250" cy="300" r="158" fill="rgba(255,255,255,0.95)" stroke="rgba(31,36,64,0.10)" stroke-width="4"/>
   <image href="${photoUrl}" x="110" y="160" width="280" height="280" preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip)"/>
+
   <text x="250" y="490" text-anchor="middle" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="rgba(31,36,64,0.78)">Your Child’s Photo</text>
 
-  <!-- Cute stickers -->
   <g opacity="0.95">
     <rect x="520" y="280" width="280" height="58" rx="29" fill="rgba(255,255,255,0.82)" stroke="rgba(31,36,64,0.10)" />
     <text x="660" y="318" text-anchor="middle" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">FREE PREVIEW ✨</text>
@@ -157,7 +157,7 @@ function makeCoverSVG(theme, kidName, kidAge, photoUrl) {
     <text x="620" y="405" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">${escapeHtml(theme.name)}</text>
 
     <text x="550" y="450" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Personalized story</text>
-    <text x="550" y="485" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Kid-friendly illustrations</text>
+    <text x="550" y="485" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Kid-friendly preview</text>
     <text x="550" y="520" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Your child as the hero</text>
     <text x="550" y="555" font-size="18" font-family="Nunito, Arial" font-weight="800" fill="rgba(31,36,64,0.72)">• Cover + pages preview</text>
 
@@ -195,11 +195,9 @@ function makePageSVG(theme, pageNumber, kidName, kidAge, photoUrl, storyLine) {
   <text x="100" y="125" font-size="24" font-family="Baloo 2, Arial" font-weight="900" fill="#1f2440">${escapeHtml(theme.storyTitle)} — Page ${pageNumber}</text>
   <text x="100" y="152" font-size="16" font-family="Nunito, Arial" font-weight="900" fill="rgba(31,36,64,0.70)">Featuring ${n} (age ${kidAge})</text>
 
-  <!-- Photo area -->
   <rect x="90" y="160" width="420" height="420" rx="34" fill="rgba(255,255,255,0.92)" stroke="rgba(31,36,64,0.10)" />
   <image href="${photoUrl}" x="90" y="160" width="420" height="420" preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip2)"/>
 
-  <!-- Story bubble -->
   <rect x="540" y="160" width="560" height="420" rx="34" fill="rgba(255,255,255,0.78)" stroke="rgba(31,36,64,0.10)" />
   <text x="575" y="235" font-size="22" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">Story</text>
 
@@ -209,31 +207,20 @@ function makePageSVG(theme, pageNumber, kidName, kidAge, photoUrl, storyLine) {
       ${line}
     </div>
   </foreignObject>
-
-  <!-- Bottom stickers -->
-  <g>
-    <rect x="90" y="610" width="260" height="52" rx="26" fill="rgba(255,207,74,0.55)" stroke="rgba(31,36,64,0.10)"/>
-    <text x="220" y="644" text-anchor="middle" font-size="18" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">${theme.icon} ${escapeHtml(theme.name)}</text>
-
-    <rect x="370" y="610" width="310" height="52" rx="26" fill="rgba(124,92,255,0.18)" stroke="rgba(31,36,64,0.10)"/>
-    <text x="525" y="644" text-anchor="middle" font-size="18" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">Made for ${n}</text>
-
-    <rect x="700" y="610" width="400" height="52" rx="26" fill="rgba(46,233,166,0.22)" stroke="rgba(31,36,64,0.10)"/>
-    <text x="900" y="644" text-anchor="middle" font-size="18" font-family="Nunito, Arial" font-weight="900" fill="#1f2440">Preview pages (demo)</text>
-  </g>
 </svg>`;
 }
 
-// ===== UI Render =====
+// -----------------------
+// UI render
+// -----------------------
 function renderThemes() {
   const grid = document.getElementById("themeGrid");
+  if (!grid) return;
   grid.innerHTML = "";
 
   THEMES.forEach(t => {
     const card = document.createElement("div");
     card.className = "themeCard" + (t.id === selectedThemeId ? " selected" : "");
-    card.dataset.theme = t.id;
-
     card.innerHTML = `
       <div class="themeIcon">${t.icon}</div>
       <div class="themeTitle">${t.name}</div>
@@ -242,23 +229,26 @@ function renderThemes() {
 
     card.addEventListener("click", () => {
       selectedThemeId = t.id;
-      document.getElementById("selectedThemeLabel").textContent = t.name;
+      const label = document.getElementById("selectedThemeLabel");
+      if (label) label.textContent = t.name;
       renderThemes();
-      // auto scroll to preview for convenience
-      document.getElementById("preview").scrollIntoView({ behavior: "smooth", block: "start" });
+      const p = document.getElementById("preview");
+      if (p) p.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     grid.appendChild(card);
   });
 
-  document.getElementById("selectedThemeLabel").textContent = getTheme(selectedThemeId).name;
+  const label = document.getElementById("selectedThemeLabel");
+  if (label) label.textContent = getTheme(selectedThemeId).name;
 }
 
 function renderExamples() {
   const grid = document.getElementById("exampleGrid");
+  if (!grid) return;
   grid.innerHTML = "";
 
-  // Use a built-in demo "photo" (cute avatar SVG) for examples:
+  // Demo "kid photo" (cartoon-style)
   const demoPhoto = svgToDataUri(`
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
       <defs>
@@ -288,48 +278,23 @@ function renderExamples() {
     card.innerHTML = `
       <div class="exTopRow">
         <div class="exName">${t.icon} ${t.name}</div>
-        <button class="exBtn" type="button">View</button>
       </div>
       <img class="exThumb" src="${cover}" alt="Example cover">
     `;
-
-    card.querySelector(".exBtn").addEventListener("click", () => openExampleModal(t, kidName, kidAge, demoPhoto));
     grid.appendChild(card);
   });
 }
 
-function openExampleModal(theme, kidName, kidAge, photoUrl) {
-  const modal = document.getElementById("modal");
-  const title = document.getElementById("modalTitle");
-  const c = document.getElementById("modalCover");
-  const p1 = document.getElementById("modalPage1");
-  const p2 = document.getElementById("modalPage2");
-
-  const storyTitle = document.getElementById("modalStoryTitle");
-  const storyLines = document.getElementById("modalStoryLines");
-
-  const line1 = theme.p1(kidName, kidAge);
-  const line2 = theme.p2(kidName);
-
-  title.textContent = `Example: ${theme.name}`;
-  c.src = svgToDataUri(makeCoverSVG(theme, kidName, kidAge, photoUrl));
-  p1.src = svgToDataUri(makePageSVG(theme, 1, kidName, kidAge, photoUrl, line1));
-  p2.src = svgToDataUri(makePageSVG(theme, 2, kidName, kidAge, photoUrl, line2));
-
-  storyTitle.textContent = theme.storyTitle;
-  storyLines.innerHTML = `• ${escapeHtml(line1)}<br/><br/>• ${escapeHtml(line2)}`;
-
-  modal.classList.remove("hidden");
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.add("hidden");
-}
-
-// ===== Preview generation using uploaded photo =====
+// -----------------------
+// Preview generator
+// -----------------------
 function setupPreviewForm() {
   const form = document.getElementById("previewForm");
   const result = document.getElementById("result");
+  if (!form || !result) return;
+
+  const beforeUpload = document.getElementById("beforeUpload");
+  const afterBook = document.getElementById("afterBook");
 
   const coverImg = document.getElementById("coverImg");
   const page1Img = document.getElementById("page1Img");
@@ -343,8 +308,14 @@ function setupPreviewForm() {
 
     const kidName = document.getElementById("kidName").value.trim();
     const kidAge = document.getElementById("kidAge").value.trim();
+
     const fileInput = document.getElementById("kidPhoto");
     const file = fileInput.files && fileInput.files[0];
+
+    if (!kidName || !kidAge) {
+      alert("Please enter name and age.");
+      return;
+    }
 
     if (!file) {
       alert("Please upload a photo first.");
@@ -353,34 +324,31 @@ function setupPreviewForm() {
 
     const theme = getTheme(selectedThemeId);
 
-    // Use uploaded photo as local URL
+    // ✅ Important: show uploaded photo immediately (BEFORE)
     const photoUrl = URL.createObjectURL(file);
+    if (beforeUpload) beforeUpload.src = photoUrl;
+
+    // ✅ After (book style): uses your photo inside the cover SVG
+    const coverDataUri = svgToDataUri(makeCoverSVG(theme, kidName, kidAge, photoUrl));
+    if (afterBook) afterBook.src = coverDataUri;
 
     const line1 = theme.p1(kidName, kidAge);
     const line2 = theme.p2(kidName);
 
-    coverImg.src = svgToDataUri(makeCoverSVG(theme, kidName, kidAge, photoUrl));
-    page1Img.src = svgToDataUri(makePageSVG(theme, 1, kidName, kidAge, photoUrl, line1));
-    page2Img.src = svgToDataUri(makePageSVG(theme, 2, kidName, kidAge, photoUrl, line2));
+    if (coverImg) coverImg.src = coverDataUri;
+    if (page1Img) page1Img.src = svgToDataUri(makePageSVG(theme, 1, kidName, kidAge, photoUrl, line1));
+    if (page2Img) page2Img.src = svgToDataUri(makePageSVG(theme, 2, kidName, kidAge, photoUrl, line2));
 
-    storyTitle.textContent = theme.storyTitle;
-    storyLines.innerHTML = `• ${escapeHtml(line1)}<br/><br/>• ${escapeHtml(line2)}`;
+    if (storyTitle) storyTitle.textContent = theme.storyTitle;
+    if (storyLines) storyLines.innerHTML = `• ${escapeHtml(line1)}<br/><br/>• ${escapeHtml(line2)}`;
 
     result.classList.remove("hidden");
     result.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
-// ===== Init =====
 document.addEventListener("DOMContentLoaded", () => {
   renderThemes();
   renderExamples();
   setupPreviewForm();
-
-  // modal events
-  document.getElementById("modalClose").addEventListener("click", closeModal);
-  document.getElementById("modalBackdrop").addEventListener("click", closeModal);
-
-  // Default selected theme label
-  document.getElementById("selectedThemeLabel").textContent = getTheme(selectedThemeId).name;
 });
