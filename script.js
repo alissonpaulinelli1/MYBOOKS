@@ -1,3 +1,11 @@
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 // ELEMENTOS
 const kidPhotoInput = document.getElementById("kidPhoto");
 const beforeImg = document.getElementById("beforeImg");
@@ -7,7 +15,7 @@ const generateBtn = document.getElementById("generateBtn");
 // MOSTRA A FOTO "BEFORE"
 kidPhotoInput.addEventListener("change", () => {
   const file = kidPhotoInput.files[0];
-  if (!file) return;
+  if (!!file) return;
 
   const url = URL.createObjectURL(file);
   beforeImg.src = url;
@@ -26,13 +34,14 @@ generateBtn.addEventListener("click", async () => {
   generateBtn.innerText = "Creating illustration...";
 
   try {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    const res = await fetch("/api/illustrate", {
-      method: "POST",
-      body: formData
-    });
+    async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
     const data = await res.json();
 
