@@ -1,50 +1,52 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+export const config = {
+  api: { bodyParser: { sizeLimit: "10mb" } }
+};
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { imageBase64, name, age, theme } = req.body;
+    const { imageBase64, childName = "child", age = "6", theme = "Adventure" } = req.body || {};
+    if (!imageBase64) return res.status(400).json({ error: "No image provided" });
 
-    if (!imageBase64 || !imageBase64.startsWith("data:image/")) {
-      return res.status(400).json({ error: "Invalid image" });
-    }
+    // remove header "data:image/...;base64,"
+    const base64 = imageBase64.replace(/^data:image\/\w+;base64,/, "");
+    const bytes = Buffer.from(base64, "base64");
 
-    const prompt = `
-Children's book illustration.
-Cute, colorful, soft pastel storybook style.
-The child is named ${name}, ${age} years old.
-Theme: ${theme}.
-Turn the real child into a cartoon character.
-Big expressive eyes, soft lighting, magical atmosphere.
-No text in the image.
-`;
+    const prompt = [
+      "Children's book illustration based on the uploaded child photo.",
+      "Convert the real child into a cute storybook character (same face identity, same hair, same skin tone).",
+      "Big friendly eyes, soft lighting, pastel colors, magical atmosphere.",
+      `Theme: ${theme}.`,
+      `Child name: ${childName}. Age: ${age}.`,
+      "No text, no watermark, no logo.",
+      "High quality, clean, kid-friendly."
+    ].join(" ");
 
-    const result = await openai.images.generate({
+    // ✅ Use Image Edit so the model actually uses the photo
+    const result = await openai.images.edits({
       model: "gpt-image-1",
+      image: bytes,
       prompt,
-      size: "1024x1024",
-      image: imageBase64
+      size: "1024x1024"
     });
 
-    const img = result.data[0].b64_json;
+    const b64 = result.data?.[0]?.b64_json;
+    if (!b64) throw new Error("No image returned from OpenAI");
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      image: `data:image/png;base64,${img}`
+      image: `data:image/png;base64,${b64}`
     });
-
   } catch (err) {
-    console.error(err);
-    res.status(500).json({
+    console.error("IMAGE ERROR:", err);
+    return res.status(500).json({
       error: "Error generating illustration",
-      details: err.message
+      details: err?.message || String(err)
     });
   }
 }
