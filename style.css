@@ -32,11 +32,7 @@ body{
     linear-gradient(180deg, var(--bg2), var(--bg1));
 }
 
-.container{
-  width:min(1120px, 92vw);
-  margin:0 auto;
-}
-
+.container{ width:min(1120px, 92vw); margin:0 auto; }
 a{ color:inherit; }
 
 .header{
@@ -56,11 +52,7 @@ a{ color:inherit; }
   gap: 14px;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
+.brand{ display:flex; align-items:center; gap:12px; }
 
 .spark{
   width:44px; height:44px;
@@ -106,6 +98,7 @@ a{ color:inherit; }
   box-shadow: 0 12px 26px rgba(124,92,255,.22);
   transition: transform .15s ease, filter .15s ease;
 }
+
 .btn:hover{ transform: translateY(-2px); filter: brightness(1.03); }
 .btn:active{ transform: translateY(0); }
 .btn.big{ padding: 13px 20px; font-size: 16px; }
@@ -117,9 +110,8 @@ a{ color:inherit; }
   box-shadow: none;
 }
 
-.hero{
-  padding: 48px 0 18px;
-}
+/* HERO */
+.hero{ padding: 48px 0 18px; }
 
 .heroGrid{
   display:grid;
@@ -143,18 +135,9 @@ a{ color:inherit; }
   max-width: 720px;
 }
 
-.heroCtas{
-  display:flex;
-  gap: 10px;
-  flex-wrap:wrap;
-  margin-bottom: 14px;
-}
+.heroCtas{ display:flex; gap: 10px; flex-wrap:wrap; margin-bottom: 14px; }
 
-.trustRow{
-  display:flex;
-  gap: 10px;
-  flex-wrap:wrap;
-}
+.trustRow{ display:flex; gap: 10px; flex-wrap:wrap; }
 
 .pill{
   padding: 9px 12px;
@@ -164,6 +147,7 @@ a{ color:inherit; }
   font-weight: 900;
 }
 
+/* MOCK BOOK */
 .mockBook{
   background: var(--card);
   border:1px solid var(--border);
@@ -213,8 +197,7 @@ a{ color:inherit; }
 }
 
 .mockPhoto{
-  width: 92px;
-  height: 92px;
+  width: 92px; height: 92px;
   border-radius: 999px;
   background: rgba(255,255,255,.80);
   border: 3px solid rgba(255,255,255,.90);
@@ -223,8 +206,7 @@ a{ color:inherit; }
 
 .mockCoverText{
   position:absolute;
-  bottom:12px;
-  left:12px;
+  bottom:12px; left:12px;
   font-weight: 900;
   background: rgba(255,255,255,.78);
   border:1px solid var(--border);
@@ -232,10 +214,7 @@ a{ color:inherit; }
   padding: 7px 10px;
 }
 
-.mockPages{
-  display:grid;
-  gap: 12px;
-}
+.mockPages{ display:grid; gap: 12px; }
 
 .mockPage{
   border-radius: 18px;
@@ -251,9 +230,8 @@ a{ color:inherit; }
   font-weight: 900;
 }
 
-.sectionHead{
-  margin: 14px 0 12px;
-}
+/* SECTIONS */
+.sectionHead{ margin: 14px 0 12px; }
 
 .sectionHead h2{
   font-family:"Baloo 2", cursive;
@@ -268,10 +246,9 @@ a{ color:inherit; }
   font-weight: 800;
 }
 
-.themes, .examples, .preview{
-  padding: 14px 0 22px;
-}
+.themes, .examples, .preview{ padding: 14px 0 22px; }
 
+/* THEMES */
 .themeGrid{
   display:grid;
   grid-template-columns: repeat(4, 1fr);
@@ -286,10 +263,9 @@ a{ color:inherit; }
   box-shadow: var(--shadow);
   padding: 14px;
   cursor:pointer;
-  position: relative;
-  overflow:hidden;
   transition: transform .16s ease;
 }
+
 .themeCard:hover{ transform: translateY(-3px); }
 
 .themeCard.selected{
@@ -328,6 +304,7 @@ a{ color:inherit; }
   font-weight: 900;
 }
 
+/* EXAMPLES */
 .exampleGrid{
   display:grid;
   grid-template-columns: repeat(4, 1fr);
@@ -358,15 +335,6 @@ a{ color:inherit; }
   font-size: 15px;
 }
 
-.exBtn{
-  padding: 8px 10px;
-  border-radius: 999px;
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.70);
-  cursor:pointer;
-  font-weight: 900;
-}
-
 .exThumb{
   width:100%;
   height: 150px;
@@ -376,6 +344,7 @@ a{ color:inherit; }
   display:block;
 }
 
+/* FORM */
 .formCard{
   background: var(--card);
   border:1px solid var(--border);
@@ -401,6 +370,7 @@ a{ color:inherit; }
   min-width: 220px;
   outline:none;
 }
+
 .previewForm input:focus{
   border-color: rgba(124,92,255,.45);
   box-shadow: 0 0 0 6px rgba(124,92,255,.15);
@@ -419,6 +389,7 @@ a{ color:inherit; }
   font-weight: 900;
   cursor:pointer;
 }
+
 .filePick input{
   position:absolute;
   inset:0;
@@ -433,6 +404,7 @@ a{ color:inherit; }
   font-weight: 900;
 }
 
+/* RESULT */
 .result{
   margin: 16px auto 0;
   background: var(--card);
@@ -441,6 +413,7 @@ a{ color:inherit; }
   box-shadow: var(--shadow);
   padding: 14px;
 }
+
 .hidden{ display:none; }
 
 .resultHead{
@@ -463,6 +436,37 @@ a{ color:inherit; }
   font-size: 12px;
 }
 
+/* BEFORE/AFTER */
+.baRow{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.baBox{
+  background: rgba(255,255,255,.74);
+  border: 1px solid rgba(31,36,64,.10);
+  border-radius: 18px;
+  padding: 12px;
+}
+
+.baTitle{
+  font-family:"Baloo 2", cursive;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.baImg2{
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(31,36,64,.10);
+  display:block;
+}
+
+/* PREVIEW GRID */
 .previewGrid{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -492,6 +496,7 @@ a{ color:inherit; }
   display:block;
 }
 
+/* STORY */
 .storyText{
   margin-top: 12px;
   background: rgba(255,255,255,.74);
@@ -512,6 +517,7 @@ a{ color:inherit; }
   line-height: 1.4;
 }
 
+/* FOOTER */
 .footer{
   padding: 22px 0;
   border-top: 1px solid var(--border);
@@ -528,67 +534,18 @@ a{ color:inherit; }
   font-weight: 900;
 }
 
-.footLinks{
-  display:flex;
-  gap: 14px;
-}
+.footLinks{ display:flex; gap: 14px; }
 
-/* Modal */
-.modal{ position: fixed; inset:0; z-index: 100; }
-.modalBackdrop{
-  position:absolute; inset:0;
-  background: rgba(15,18,35,.55);
-}
-.modalBox{
-  position: relative;
-  width: min(1100px, 92vw);
-  max-height: 88vh;
-  margin: 6vh auto;
-  background: rgba(255,255,255,.92);
-  border:1px solid var(--border);
-  border-radius: var(--r);
-  box-shadow: var(--shadow);
-  overflow:auto;
-  padding: 14px;
-}
-
-.modalTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.modalTitle{
-  font-family:"Baloo 2", cursive;
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.xBtn{
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.75);
-  border-radius: 12px;
-  padding: 8px 10px;
-  cursor:pointer;
-  font-weight: 900;
-}
-
-.modalGrid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 1020px){
   .heroGrid{ grid-template-columns: 1fr; }
   .themeGrid{ grid-template-columns: repeat(2, 1fr); }
   .exampleGrid{ grid-template-columns: repeat(2, 1fr); }
   .previewGrid{ grid-template-columns: 1fr; }
-  .modalGrid{ grid-template-columns: 1fr; }
+  .baRow{ grid-template-columns: 1fr; }
+  .baImg2{ height: 220px; }
 }
+
 @media (max-width: 520px){
   .themeGrid{ grid-template-columns: 1fr; }
   .exampleGrid{ grid-template-columns: 1fr; }
